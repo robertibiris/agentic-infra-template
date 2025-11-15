@@ -2,8 +2,8 @@
 
 status: {pending | active | paused | completed}
 priority: {high | medium | low}
-created: {YYYY-MM-DD}
-updated: {YYYY-MM-DD}
+created: {YYYY-MM-DD HH:MM TZ}
+updated: {YYYY-MM-DD HH:MM TZ}
 
 ## Objective
 {Describe the plan’s intention and success criteria.}
@@ -15,6 +15,6 @@ updated: {YYYY-MM-DD}
 {Add here anything else you think neecessary to include in the plan, you can create other markdown sections or elements if you want}
 
 ## Progress Notes
-- {YYYY-MM-DD} — {Most recent update first}
-- {YYYY-MM-DD} — {Older update}
+- {YYYY-MM-DD HH:MM TZ} — {Most recent update first}
+- {YYYY-MM-DD HH:MM TZ} — {Older update}
 
