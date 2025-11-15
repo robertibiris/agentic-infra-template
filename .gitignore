@@ -1,0 +1,46 @@
+# Video files (excluded due to large file sizes)
+*.mp4
+*.MP4
+*.mov
+*.MOV
+*.avi
+*.AVI
+*.mkv
+*.MKV
+*.wmv
+*.WMV
+*.flv
+*.FLV
+*.webm
+*.WEBM
+
+# System files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.log
+*.cache
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Note: Context files (AGENTS.md, .agents/, .cursor/) are tracked in git
+
