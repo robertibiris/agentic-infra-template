@@ -9,7 +9,7 @@ with the details of the REAL project.
 
 - **Plan**: A bounded initiative documented in `plan.md` under `.agents/plans/{PLAN_NAME}`. Plans contain the intent, requirements, high-level steps, links to their tasks, and a reverse-chronological progress log.
 - **Task**: An executable unit inside the same plan folder (`{TASK_NAME}.md`). Tasks reference their parent plan, list concrete steps, outputs, dependencies, and track progress notes the same way plans do.
-- **Status**: `active`, `paused`, or `completed`. Status is stored in each file’s front-matter block and is updated whenever work starts, stops, or finishes.
+- **Status**: `pending`, `active`, `paused`, or `completed`. Status is stored in each file’s front-matter block and is updated whenever work is waiting to be picked up (`pending`), currently in progress (`active`), temporarily halted (`paused`), or done (`completed`).
 - **Progress notes**: Appended in reverse chronological order every time a material update happens (new insight, partial delivery, blockers, etc.).
 - **Workflow**: Create or select a plan, decompose into tasks, execute tasks incrementally, append notes, and keep statuses accurate so that automation can determine “what’s next.”
 

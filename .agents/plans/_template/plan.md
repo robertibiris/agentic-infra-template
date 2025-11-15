@@ -1,6 +1,6 @@
 # Plan: {PLAN_NAME}
 
-status: {active | paused | completed}
+status: {pending | active | paused | completed}
 priority: {high | medium | low}
 created: {YYYY-MM-DD}
 updated: {YYYY-MM-DD}

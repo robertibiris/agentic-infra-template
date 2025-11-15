@@ -1,7 +1,7 @@
 # Task: {TASK_NAME}
 
 belongs_to_plan: {PLAN_NAME}
-status: {active | paused | completed}
+status: {pending | active | paused | completed}
 created: {YYYY-MM-DD}
 updated: {YYYY-MM-DD}
 
