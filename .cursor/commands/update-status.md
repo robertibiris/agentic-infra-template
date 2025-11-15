@@ -1,0 +1,1 @@
+See `.agents/commands/update-status.md` for complete command documentation and instructions.
