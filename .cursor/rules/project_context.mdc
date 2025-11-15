@@ -1,0 +1,22 @@
+---
+description: Project context and agentic structure reference
+globs: "*"
+alwaysApply: true
+---
+
+# Project Context Reference
+
+This project uses an agentic context structure. Always reference the main context file:
+
+**Primary Context**: `AGENTS.md` - Contains the single source of truth for understanding this repository's purpose, structure, and organization.
+
+This is a meditation audio repository organized by source, with a hierarchical structure: Source → Course/Collection → Week → Day → Files.
+
+**For complete structure details, see `AGENTS.md`** - it contains the single source of truth with full directory structure, naming conventions, and organization patterns.
+
+When working with this repository:
+- Follow the hierarchical structure: Source → Course/Collection → Week → Day → Files
+- Each Day folder contains Practice (Meditation) and Theory files
+- Maintain consistent naming conventions within each source
+- Support both audio files and optional transcripts/text resources
+- Keep related files together in appropriate directories
