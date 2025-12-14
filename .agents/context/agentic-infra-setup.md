@@ -217,6 +217,19 @@ Use this checklist to verify your setup:
 - [ ] No duplication of information between files
 - [ ] Context files are clear and actionable
 
+#### Step 8: Set Up Nested Plans Repository (Optional)
+
+**Why**: Plans are developer-specific work that doesn't need to be shared in the main repository. The main repository's `.gitignore` is configured to ignore plan files (except templates and README). Setting up a nested git repository in `.agents/plans/` allows you to:
+
+- Track your plan progress locally with git commits
+- Maintain independent plan history
+- Keep the main repository clean and focused on shared infrastructure
+- Avoid conflicts with plan files in the main repo
+
+**How**: Run the `setup-nested-plans-repo` command or see `.agents/commands/setup-nested-plans-repo.md` for detailed step-by-step instructions with copy-pasteable terminal commands.
+
+**Note**: This step is completely optional. You can use plans without version control, or set this up later when you need it.
+
 ---
 
 ## Templates

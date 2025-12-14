@@ -14,3 +14,14 @@ Each folder must contain:
 
 Refer to the `_template` directory for ready-to-copy plan and task files.
 
+## Nested Repository Setup (Optional)
+
+To enable local version control of your plans without committing them to the main repository, you can set up a nested git repository in this directory. This is recommended because:
+
+- Plans are developer-specific and ignored by the main repository
+- You can track your plan progress locally with git commits
+- Each developer maintains independent plan history
+- No conflicts with the main repository
+
+**To set up**: Run the `setup-nested-plans-repo` command or see `.agents/commands/setup-nested-plans-repo.md` for detailed instructions and copy-pasteable commands.
+

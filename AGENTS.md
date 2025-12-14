@@ -22,6 +22,7 @@ with the details of the REAL project.
   - `.agents/plans/` groups every plan by name. Each plan directory contains:
     - `plan.md` – metadata, objectives, requirements, steps, tasks summary, and progress log.
     - `{TASK_NAME}.md` – one file per task with metadata, steps, outputs, dependencies, and progress notes.
+    - **Nested Repository (Optional)**: It's recommended to set up a nested git repository in `.agents/plans/` for local version control of plans. Since plans are ignored by the main repository, a nested repo allows developers to track plan progress independently. See `.agents/commands/setup-nested-plans-repo.md` for setup instructions.
 - Plans and tasks must not be merged together; every concern has its own file. Metadata, timestamps, and note ordering must stay consistent across the hierarchy.
 
 ## Command Index
@@ -29,9 +30,10 @@ with the details of the REAL project.
 - **`.agents/commands/review-agentic-infra.md`** - 
 Command to review and audit agent infrastructure
 - **`.agents/commands/create-plan.md`** – scaffold a new plan directory, generate `plan.md` from the template, and register the plan.
-- **`.agents/commands/create-task.md`** – add a task file under an existing plan and append the task entry in that plan’s “Tasks” section.
+- **`.agents/commands/create-task.md`** – add a task file under an existing plan and append the task entry in that plan's "Tasks" section.
 - **`.agents/commands/update-status.md`** – change the status of a plan or task, append an optional progress note, and propagate task status summaries back to `plan.md`.
 - **`.agents/commands/whats-next.md`** – scan all plan directories, find active items, determine the next actionable steps, and report them. Run this command whenever you resume work.
+- **`.agents/commands/setup-nested-plans-repo.md`** – initialize a nested git repository in `.agents/plans/` for local version control of plans. Recommended if you want to track plan progress independently without committing to the main repository.
 
 ## Guidance for Resuming Work
 
