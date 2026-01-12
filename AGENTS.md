@@ -29,7 +29,8 @@ with the details of the REAL project.
 
 - **`.agents/commands/review-agentic-infra.md`** - 
 Command to review and audit agent infrastructure
-- **`.agents/commands/create-plan.md`** – scaffold a new plan directory, generate `plan.md` from the template, and register the plan.
+- **`.agents/commands/setup-agentic-context.md`** – bootstrap the agentic infrastructure in a new repo (authoritative setup guide: `.agents/context/agentic-infra-setup.md`).
+- **`.agents/commands/create-plan.md`** – scaffold a new plan directory and generate `plan.md` from the template.
 - **`.agents/commands/create-task.md`** – add a task file under an existing plan and append the task entry in that plan's "Tasks" section.
 - **`.agents/commands/update-status.md`** – change the status of a plan or task, append an optional progress note, and propagate task status summaries back to `plan.md`.
 - **`.agents/commands/whats-next.md`** – scan all plan directories, find active items, determine the next actionable steps, and report them. Run this command whenever you resume work.

@@ -4,7 +4,7 @@
 Initialize an **optional nested git repository** inside `.agents/plans/` so developers can version-control their plan work locally, without committing plan directories to the main repository.
 
 This command:
-- Creates (or refreshes) the nested repo’s `.gitignore` from the **single source of truth** template.
+- Creates the nested repo’s `.gitignore` from the **single source of truth** template (first-run only).
 - Initializes the nested repository.
 - Creates an initial commit containing **only** `.gitignore`, so the repo is immediately usable.
 
@@ -32,7 +32,7 @@ The script performs the following steps:
    - Verifies the template file exists at `.agents/plans/_template/nested-plans-repo.gitignore.template`
 
 2. **Idempotent check**:
-   - If `.agents/plans/.git/` already exists, prints "already initialized" message and exits with code 0 (no changes made)
+   - If `.agents/plans/.git/` already exists, prints "already initialized" message and exits with code 0 (**no changes made**, including no `.gitignore` refresh)
 
 3. **Setup (only if not already initialized)**:
    - Copies `.gitignore` from the template (single source of truth)
@@ -78,3 +78,4 @@ The script performs the following steps:
   - `.agents/plans/AGENTS.md`
 - The nested repo’s `.gitignore` content must come from the template at `.agents/plans/_template/nested-plans-repo.gitignore.template`.
   - Do not maintain a second “authoritative” copy elsewhere.
+  - If you need to update an existing nested repo’s `.gitignore`, copy the template manually and commit inside the nested repo as desired.

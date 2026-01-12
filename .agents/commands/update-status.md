@@ -5,8 +5,8 @@ Change the lifecycle status of a plan or task, capture an optional progress note
 
 ## Inputs
 - `target` (required) – path or identifier of the plan (`plan`) or task (`plan/task`). If the user does not provide it explicitely, ALWAYS try to infer it first, by assuming the task the user is working on in the current session. If truly unclear, ask the user.
-- `new_status` (required) – one of `active`, `paused`, `completed`. If the user does not provide it explicitely, ALWAYS try to infer it first, by assuming the task the user is working on in the current session. If truly unclear, ask the user.
-- `progress_note` (optional) – free-form note to append in the Progress Notes section (strongly recommended). Also try to ifer it, since the user typically works with YOU, so you should know what notes wre worthy of adding.
+- `new_status` (required) – one of `pending`, `active`, `paused`, `completed`. If the user does not provide it explicitely, ALWAYS try to infer it first, by assuming the task the user is working on in the current session. If truly unclear, ask the user.
+- `progress_note` (optional) – free-form note to append in the Progress Notes section (strongly recommended). Also try to infer it, since the user typically works with YOU, so you should know what notes were worthy of adding.
 
 **IMPORTANT NOTE**: If the user does not provide some or any needed inputs explicitely, ALWAYS try to infer them first, by using the context of your interaction with the user in the current session he's having with YOU. If truly unclear, ask the user for any needed information.
 
@@ -14,7 +14,7 @@ Change the lifecycle status of a plan or task, capture an optional progress note
 1. Resolve the target file:
    - Plans: `.agents/plans/{PLAN_NAME}/plan.md`
    - Tasks: `.agents/plans/{PLAN_NAME}/{TASK_NAME}.md`
-2. Update the `status` field and the `updated` timestamp (ISO date).
+2. Update the `status` field and the `updated` timestamp using the canonical format: `YYYY-MM-DD HH:MM TZ`.
 3. Append the provided progress note (or an automatic default) to the Progress Notes section, ensuring newest entries appear first.
 4. If the target is a task:
    - Update the corresponding bullet in the parent plan’s “Tasks” section to reflect the new status summary.

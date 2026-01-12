@@ -13,7 +13,7 @@ Add a task file under an existing plan, populate it from the Task File Template,
 2. Generate the task file using the Task Template (templates found at `.agents/plans/_template`):
    - Set `belongs_to_plan` to the parent plan name.
    - Initialize `status: active`.
-   - Populate `created` and `updated` fields with the current ISO date.
+   - Populate `created` and `updated` using the canonical timestamp format: `YYYY-MM-DD HH:MM TZ`.
    - Insert the provided `purpose`
    - IMPORTANT: Add the actual information relevant to describe the task in the resulting file, as you see fit, respecting markdown format and the template.
 3. Append an entry to the parent `plan.md` “Tasks” section in the format `- {TASK_NAME}.md — {status summary}`.

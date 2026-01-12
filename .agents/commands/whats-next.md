@@ -8,8 +8,8 @@ Surface the next actionable steps across every active plan so work can resume wi
    - Be wise, you don't need to read ALL the contents in the `plan.md` files, since you only need the line about the status, which you can fetch via some terminal command(s).
 2. For each active plan:
    - Parse the “Tasks” list and open each referenced task file.
-   - Identify tasks with `status` `active` or `paused`; if none exist, flag that new tasks are required.
-   - Determine the highest-priority actionable step (e.g., first `active` task with incomplete steps).
+   - Identify tasks with `status` `active`, `paused`, or `pending`; if none exist, flag that new tasks are required.
+   - Determine the highest-priority actionable step (e.g., first `active` task with incomplete steps; otherwise the first `pending` task).
 3. Produce a summary report:
    - Plan name, priority, and status.
    - Next task name with a short derived hint (e.g., first bullet from “Steps to Complete”).
