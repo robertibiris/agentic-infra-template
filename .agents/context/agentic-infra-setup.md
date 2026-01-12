@@ -138,7 +138,7 @@ Before starting, answer these questions:
    - [ ] No, root-level context is sufficient
    - [ ] I'm not sure (we'll analyze AFTER setup)
 
-3. **What specilized context files would you like to setup?**
+3. **What specialized context files would you like to setup?**
    - [ ] commit_guidelines.md context
    - [ ] project_architecture.md context
    - [ ] project_status.md context
@@ -161,7 +161,7 @@ mkdir .agents
 
 Create the essential context files, inside .agents/ (according to each project's needs. you can skip this for initial setup or suggest some files as well. example: commit guidelines, project architecture, ...)
 Examples:
-- `.agents/ commit_guidelines.md` 
+- `.agents/ commit_guidelines.md`
 - `.agents/ current_project_progress.md`
 
 #### Step 4: Add Platform-Specific Files
@@ -216,19 +216,6 @@ Use this checklist to verify your setup:
 - [ ] All files reference `AGENTS.md` as primary context source
 - [ ] No duplication of information between files
 - [ ] Context files are clear and actionable
-
-#### Step 8: Set Up Nested Plans Repository (Optional)
-
-**Why**: Plans are developer-specific work that doesn't need to be shared in the main repository. The main repository's `.gitignore` is configured to ignore plan files (except templates and README). Setting up a nested git repository in `.agents/plans/` allows you to:
-
-- Track your plan progress locally with git commits
-- Maintain independent plan history
-- Keep the main repository clean and focused on shared infrastructure
-- Avoid conflicts with plan files in the main repo
-
-**How**: Run the `setup-nested-plans-repo` command or see `.agents/commands/setup-nested-plans-repo.md` for detailed step-by-step instructions with copy-pasteable terminal commands.
-
-**Note**: This step is completely optional. You can use plans without version control, or set this up later when you need it.
 
 ---
 

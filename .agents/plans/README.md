@@ -25,3 +25,8 @@ To enable local version control of your plans without committing them to the mai
 
 **To set up**: Run the `setup-nested-plans-repo` command or see `.agents/commands/setup-nested-plans-repo.md` for detailed instructions and copy-pasteable commands.
 
+### Single source of truth for the nested `.gitignore`
+The nested repository’s `.gitignore` content must come from the tracked template:
+- `.agents/plans/_template/nested-plans-repo.gitignore.template`
+
+Do not manually maintain a second “authoritative” `.gitignore` copy elsewhere.

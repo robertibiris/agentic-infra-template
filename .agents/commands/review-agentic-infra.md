@@ -4,7 +4,7 @@ Review and audit the AI agent infrastructure for a project. This includes contex
 
 ## Command Purpose
 
-This command instructs the AI agent to perform a comprehensive review of the agentic setup infrastructure. The review focuses exclusively on files and components that are part of the AI agent infrastructure, following the philosophy outlined in `.agents/agentic-context-setup.md`.
+This command instructs the AI agent to perform a comprehensive review of the agentic setup infrastructure. The review focuses exclusively on files and components that are part of the AI agent infrastructure, following the philosophy outlined in `.agents/context/agentic-infra-setup.md`.
 
 **Scope**: Agent infrastructure only (not project code/content)
 
@@ -13,7 +13,7 @@ This command instructs the AI agent to perform a comprehensive review of the age
 ### Context Files (Documentation) to Review:
 - `AGENTS.md` (root level and in subdirectories if any)
 - `.agents/` directory:
-  - `agentic-context-setup.md`
+  - `context/agentic-infra-setup.md`
   - `commands/*.md`
   - Any other `.md` context files
 - `.cursor/` directory:
@@ -53,7 +53,7 @@ This command instructs the AI agent to perform a comprehensive review of the age
 For each context file, evaluate against these criteria:
 
 #### 1. Structure & Organization
-- [ ] Follows `agentic-context-setup.md` patterns?
+- [ ] Follows `agentic-infra-setup.md` patterns?
 - [ ] Proper directory organization?
 - [ ] Clear and descriptive file naming?
 - [ ] Appropriate file location?
@@ -71,7 +71,7 @@ For each context file, evaluate against these criteria:
 - [ ] Consistent formatting and style?
 - [ ] References between files are correct?
 
-#### 4. Best Practices (from agentic-context-setup.md)
+#### 4. Best Practices (from agentic-infra-setup.md)
 - [ ] Single source of truth (no duplication)?
 - [ ] Platform files reference core context (not duplicate)?
 - [ ] Proper separation of concerns?
@@ -135,7 +135,7 @@ Produce a structured review report with the following sections:
 
 ### Section 1: Overview
 - **Summary**: Brief overview of agent infrastructure state
-- **Files Reviewed**: 
+- **Files Reviewed**:
   - List of context files reviewed
   - List of scripts reviewed
 - **High-Level Assessment**: Overall health of agent infrastructure
@@ -146,7 +146,7 @@ Produce a structured review report with the following sections:
 - **Structure & Organization**: Findings on file organization
 - **Content Quality**: Issues with completeness/clarity
 - **Consistency**: Inconsistencies found across files
-- **Best Practices**: Adherence to agentic-context-setup.md principles
+- **Best Practices**: Adherence to agentic-infra-setup.md principles
 - **Maintainability**: Ease of maintenance and updates
 - **File-Specific Recommendations**: Detailed suggestions per file
 
@@ -175,7 +175,7 @@ When executing this review:
 1. **Be thorough**: Review all agent infrastructure files systematically
 2. **Be constructive**: Provide actionable suggestions, not just criticism
 3. **Prioritize**: Focus on most impactful improvements first
-4. **Reference authority**: Use `agentic-context-setup.md` as the guiding document
+4. **Reference authority**: Use `agentic-infra-setup.md` as the guiding document
 5. **Be specific**: Provide concrete examples and file references
 6. **Consider context**: Understand the project's needs and constraints
 7. **Balance**: Don't over-engineer, but ensure quality and maintainability
@@ -194,7 +194,8 @@ When executing this review:
 ### Good: Context File Organization
 ```
 .agents/
-├── agentic-context-setup.md      # Setup guide
+├── context/
+│   └── agentic-infra-setup.md   # Setup guide
 ├── commands/
 │   └── organize-inbox.md         # Command instructions
 └── meditation-inbox-organizer.md # Detailed workflow
@@ -223,5 +224,4 @@ Should be broken into modules.
 
 ---
 
-**Note**: This command is designed to be portable. You can copy this file (and the corresponding `.cursor/commands/review-agentic-infra.md`) to any project that follows the agentic-context-setup.md pattern.
-
+**Note**: This command is designed to be portable. You can copy this file (and the corresponding `.cursor/commands/review-agentic-infra.md`) to any project that follows the agentic-infra-setup.md pattern.
