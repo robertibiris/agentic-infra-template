@@ -4,8 +4,10 @@
 Surface the next actionable steps across every active plan so work can resume without ambiguity.
 
 ## Behavior
-1. Scan `.agents/plans/*/plan.md`, skipping directories marked `completed`.
-   - Be wise, you don't need to read ALL the contents in the `plan.md` files, since you only need the line about the status, which you can fetch via some terminal command(s).
+1. Enumerate plan directories by direct filesystem listing of `.agents/plans/` (not ignore-aware search), then inspect each `{PLAN_NAME}/plan.md`.
+   - Exclude non-plan entries such as `_template`, `.git`, `README.md`, `AGENTS.md`, and hidden/system files.
+   - Skip plans marked `completed`.
+   - Be wise: you do not need to read all content in each `plan.md` if you only need the status line at first.
 2. For each active plan:
    - Parse the “Tasks” list and open each referenced task file.
    - Identify tasks with `status` `active`, `paused`, or `pending`; if none exist, flag that new tasks are required.
@@ -26,3 +28,5 @@ Plan: {PLAN_NAME} (priority {priority})
 ## Notes
 - Ensure reverse-chronological progress notes remain untouched; this command is read-only.
 - The summary should be concise to fit a terminal view.
+- Plan discovery must be resilient to outer-repository `.gitignore` rules (plan folders may be intentionally ignored).
+- Avoid ignore-aware discovery methods for this command unless explicitly configured to include ignored paths.

@@ -1,6 +1,6 @@
-# 🤖 Agentic Context Setup Guide
+# 🤖 Agentic Infrastructure Setup Guide
 
-*A comprehensive guide for setting up AI agent context in any project, in a platform-agnostic manner (Cursor, Claude code, Copilot, etc...)*
+*A comprehensive guide for setting up AI agent infrastructure in any project, in a platform-agnostic manner (Cursor, Claude Code, Copilot, etc.).*
 
 ---
 
@@ -15,7 +15,7 @@
 
 ### System Overview
 
-The complete agentic context system consists of:
+The complete agentic infrastructure system consists of:
 
 ```
 project-root/
@@ -33,6 +33,8 @@ project-root/
 ├── .github/
 │   └── copilot-instructions.md # 🤖 GitHub Copilot integration (OPTIONAL)
 ├── CLAUDE.md                   # 🧠 Claude AI integration (OPTIONAL)
+├── .claude/
+│   └── commands/               # 🧠 Claude command wrappers (OPTIONAL)
 └── [subdirectory]/
     └── AGENTS.md               # 📄 Subdirectory-specific context (OPTIONAL)
 ```
@@ -138,7 +140,7 @@ Before starting, answer these questions:
    - [ ] No, root-level context is sufficient
    - [ ] I'm not sure (we'll analyze AFTER setup)
 
-3. **What specialized context files would you like to setup?**
+3. **What specialized context files would you like to set up?**
    - [ ] commit_guidelines.md context
    - [ ] project_architecture.md context
    - [ ] project_status.md context
@@ -159,10 +161,10 @@ mkdir .agents
 
 #### Step 3: Add Modular Context Files
 
-Create the essential context files, inside .agents/ (according to each project's needs. you can skip this for initial setup or suggest some files as well. example: commit guidelines, project architecture, ...)
+Create the essential context files inside `.agents/` according to each project's needs. You can skip this for initial setup or suggest some files as well (for example: commit guidelines, project architecture).
 Examples:
-- `.agents/ commit_guidelines.md`
-- `.agents/ current_project_progress.md`
+- `.agents/commit_guidelines.md`
+- `.agents/current_project_progress.md`
 
 #### Step 4: Add Platform-Specific Files
 
@@ -186,13 +188,14 @@ mkdir -p .github/instructions
 **For Claude users:**
 ```bash
 # Create CLAUDE.md file
+# Optionally create .claude/commands wrappers that reference .agents/commands/*
 ```
 
 #### Step 5: Optionally Create Subdirectory AGENTS.md Files
 
 If you identified subdirectories that need specific context, create `AGENTS.md` files in those directories.
 
-NOTE: When using CLAUDE, then we can create the dubdirectory `CLAUDE.md` files in the same way, but in order not to duplicate logic, they should only reference the sibling `AGENTS.md` file in the same subdirectory.
+NOTE: When using Claude, you can create subdirectory `CLAUDE.md` files in the same way. To avoid duplicate logic, they should only reference the sibling `AGENTS.md` file in the same subdirectory.
 
 #### Step 6: Add .gitignore Entries (if using Git)
 
@@ -202,7 +205,7 @@ Add these entries to your `.gitignore`:
 # AI Agent context files (optional - you may want to track these)
 # .agents/
 # AGENTS.md
-# .cursorrules
+# .cursor/
 # CLAUDE.md
 ```
 
@@ -260,7 +263,7 @@ alwaysApply: true
 
 # Project Context Reference
 
-This project uses an agentic context structure. Always reference the main context file:
+This project uses an agentic infrastructure structure. Always reference the main context file:
 
 **Primary Context**: `AGENTS.md` - Contains the single source of truth for understanding this repository's purpose, structure, and organization.
 
@@ -289,7 +292,7 @@ This example outlines the fact that local rules that have a source of truth insi
 # GitHub Copilot Instructions for [Project Name]
 
 ## Primary Context Source
-This project uses an agentic context structure. Always reference the main context file:
+This project uses an agentic infrastructure structure. Always reference the main context file:
 
 **Primary Context**: `AGENTS.md` - Contains the single source of truth for understanding this repository's purpose, structure, and organization.
 
@@ -297,7 +300,7 @@ This project uses an agentic context structure. Always reference the main contex
 - `.agents/file1.md` - [Description that defines when its useful to look into this]
 - `.agents/file2.md` - [Description that defines when its useful to look into this]
 - `.agents/file3.md` - [Description that defines when its useful to look into this]
-[Any COPILOT-SPECIFIC context here. make sure this is truly something specific for the platform, and aything else should go into our reusable context files]
+[Any COPILOT-SPECIFIC context here. Make sure this is truly platform-specific, and anything else goes into reusable context files.]
 ```
 
 ### CLAUDE.md Template
@@ -306,7 +309,7 @@ This project uses an agentic context structure. Always reference the main contex
 # Claude Context for [Project Name]
 
 ## Primary Context Source
-This project uses an agentic context structure. Always reference the main context file:
+This project uses an agentic infrastructure structure. Always reference the main context file:
 
 **Primary Context**: `AGENTS.md` - Contains the single source of truth for understanding this repository's purpose, structure, and organization.
 
@@ -315,7 +318,7 @@ This project uses an agentic context structure. Always reference the main contex
 - `.agents/file2.md` - [Description that defines when its useful to look into this]
 - `.agents/file3.md` - [Description that defines when its useful to look into this]
 
-[Any CLAUDE-SPECIFIC context here. make sure this is truly something specific for the platform, and aything else should go into our reusable context files]
+[Any CLAUDE-SPECIFIC context here. Make sure this is truly platform-specific, and anything else goes into reusable context files.]
 ```
 
 ---
@@ -351,7 +354,7 @@ This project uses an agentic context structure. Always reference the main contex
 
 ### Racks Academy Implementation
 
-The Racks Academy AI Course Repository serves as a real-world example of this agentic context system:
+The Racks Academy AI Course Repository serves as a real-world example of this agentic infrastructure system:
 
 **Project Type**: Educational content repository
 
@@ -370,7 +373,7 @@ Racks Academy/
 │   ├── guidelines.md           # Content management best practices
 │   ├── nomenclature.md         # Spanish naming conventions
 │   └── curso_ai_catalogo.md    # Course catalog reference
-├── .cursorrules                # Cursor-specific behaviors
+├── .cursor/rules/              # Cursor-specific behaviors
 └── Aula_XX_Nombre/             # Educational content structure
 ```
 
@@ -419,4 +422,4 @@ Racks Academy/
 
 ---
 
-*This guide is part of the agentic context system. It can be copied to any project and customized for specific needs.*
+*This guide is part of the agentic infrastructure system. It can be copied to any project and customized for specific needs.*

@@ -18,7 +18,7 @@ with the details of the REAL project.
 - `AGENTS.md` (this file) is the master reference. It never lists active plans; instead it documents how to use the system.
 - `.agents/` stores all structured context:
   - `.agents/context/agentic-infra-setup.md` provides the detailed reference for setting up and auditing the agentic infrastructure. Consult it when cloning this template or when auditing an existing repo.
-  - `.agents/commands/` holds command definitions. Each command describes its inputs, behavior, and expected side effects. REFERENCE (DON'T duplicate) these commands inside `.cursor/commands/` so editors can invoke them (thus keeping a single source of truth for the actual command contents).
+  - `.agents/commands/` holds command definitions. Each command describes its inputs, behavior, and expected side effects. REFERENCE (DON'T duplicate) these commands inside `.cursor/commands/` and `.claude/commands/` so editors/agents can invoke them while keeping a single source of truth.
   - `.agents/plans/` groups every plan by name. Each plan directory contains:
     - `plan.md` – metadata, objectives, requirements, steps, tasks summary, and progress log.
     - `{TASK_NAME}.md` – one file per task with metadata, steps, outputs, dependencies, and progress notes.
@@ -50,7 +50,7 @@ Command to review and audit agent infrastructure
 - Whenever interacting with a plan or task, summarize the current state and propose the next logical step before making changes.
 - Suggest creating a task whenever a plan’s step grows complex or ambiguous.
 - Maintain timestamps, status fields, and reverse-chronological progress notes with every update.
-- Record all dates/times using the local system timezone (currently CET as reported by `date`) and include hour/minute stamps (`YYYY-MM-DD HH:MM TZ`) so metadata and progress notes remain consistent without manual adjustments.
+- Record all dates/times using the local system timezone as reported by `date`, and include hour/minute stamps (`YYYY-MM-DD HH:MM TZ`) so metadata and progress notes remain consistent without manual adjustments.
 - Surface any missing metadata or structural inconsistencies and fix them before proceeding.
 - After completing or pausing work, always recommend running `whats-next` so future sessions can resume seamlessly.
 
