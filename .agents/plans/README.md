@@ -14,6 +14,13 @@ Each folder must contain:
 
 Refer to the `_template` directory for ready-to-copy plan and task files.
 
+## Learnings
+- Each plan can optionally include a `learnings.md` file for non-obvious insights discovered during execution.
+- `_learnings/` stores cross-cutting reference docs not tied to one plan (topic-named, for example `content-ingestion-patterns.md`).
+- If a feature produces learnings but has no plan yet, create a minimal plan folder so `learnings.md` follows the same convention.
+- Use `create-learning` for interactive learnings creation.
+- Use `_template/learnings.md` as the standard structure for learnings files.
+
 ## Nested Repository Setup (Optional)
 
 To enable local version control of your plans without committing them to the main repository, you can set up a nested git repository in this directory. This is recommended because:

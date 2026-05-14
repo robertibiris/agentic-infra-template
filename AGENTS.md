@@ -9,6 +9,7 @@ with the details of the REAL project.
 
 - **Plan**: A bounded initiative documented in `plan.md` under `.agents/plans/{PLAN_NAME}`. Plans contain the intent, requirements, high-level steps, links to their tasks, and a reverse-chronological progress log.
 - **Task**: An executable unit inside the same plan folder (`{TASK_NAME}.md`). Tasks reference their parent plan, list concrete steps, outputs, dependencies, and track progress notes the same way plans do.
+- **Learning**: Insights captured during plan execution, stored in `learnings.md` within each plan directory. Cross-cutting reference docs live in `_learnings/`. Use `create-learning` to create interactively.
 - **Status**: `pending`, `active`, `paused`, or `completed`. Status is stored in each file’s front-matter block and is updated whenever work is waiting to be picked up (`pending`), currently in progress (`active`), temporarily halted (`paused`), or done (`completed`).
 - **Progress notes**: Appended in reverse chronological order every time a material update happens (new insight, partial delivery, blockers, etc.).
 - **Workflow**: Create or select a plan, decompose into tasks, execute tasks incrementally, append notes, and keep statuses accurate so that automation can determine “what’s next.”
@@ -22,6 +23,8 @@ with the details of the REAL project.
   - `.agents/plans/` groups every plan by name. Each plan directory contains:
     - `plan.md` – metadata, objectives, requirements, steps, tasks summary, and progress log.
     - `{TASK_NAME}.md` – one file per task with metadata, steps, outputs, dependencies, and progress notes.
+  - `learnings.md` (optional) – plan-specific insights discovered during execution.
+  - `_learnings/` – cross-cutting reference documents (topic-named, not tied to any single plan).
     - **Nested Repository (Optional)**: It's recommended to set up a nested git repository in `.agents/plans/` for local version control of plans. Since plans are ignored by the main repository, a nested repo allows developers to track plan progress independently. See `.agents/commands/setup-nested-plans-repo.md` for setup instructions.
 - Plans and tasks must not be merged together; every concern has its own file. Metadata, timestamps, and note ordering must stay consistent across the hierarchy.
 
@@ -35,6 +38,7 @@ Command to review and audit agent infrastructure
 - **`.agents/commands/update-status.md`** – change the status of a plan or task, append an optional progress note, and propagate task status summaries back to `plan.md`.
 - **`.agents/commands/whats-next.md`** – scan all plan directories, find active items, determine the next actionable steps, and report them. Run this command whenever you resume work.
 - **`.agents/commands/setup-nested-plans-repo.md`** – initialize a nested git repository in `.agents/plans/` for local version control of plans. Recommended if you want to track plan progress independently without committing to the main repository.
+- **`.agents/commands/create-learning.md`** – interactively create a learnings file for a plan or cross-cutting topic. It compiles insights from current context (or branch history), drafts using the template, and writes after user confirmation.
 
 ## Guidance for Resuming Work
 
