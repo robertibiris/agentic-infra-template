@@ -1,1 +1,0 @@
-See `.agents/commands/whats-next.md` for complete command documentation and instructions.

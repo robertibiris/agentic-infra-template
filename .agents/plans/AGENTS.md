@@ -33,7 +33,7 @@ Plans are developer-specific work that doesn't need to be shared in the main rep
 2. **For plan-specific operations**: Work within this nested repository structure:
    - Plans are tracked by this nested repo, not the main repo
    - Use standard git commands within this directory to commit plan changes
-   - Use `setup-nested-plans-repo` to initialize the nested repo (see `.agents/commands/setup-nested-plans-repo.md`)
+   - Use the `setup-nested-plans-repo` skill to initialize the nested repo
    - The nested repo’s `.gitignore` is generated from the single source of truth template:
      - `.agents/plans/_template/nested-plans-repo.gitignore.template`
    - The `.gitignore` in this nested repo ignores files tracked by the main repo (`README.md`, `AGENTS.md`, `_template/`)
@@ -51,7 +51,7 @@ Plans are developer-specific work that doesn't need to be shared in the main rep
 ## Reference
 
 For complete agentic infrastructure documentation, see the main repository's `AGENTS.md` file, which contains:
-- Plans and tasks overview
-- Command index
+- Tracked plans and tasks overview
+- Skills index
 - Workflow guidance
 - Assistant behavior requirements

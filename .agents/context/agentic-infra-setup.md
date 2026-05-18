@@ -20,23 +20,32 @@ The complete agentic infrastructure system consists of:
 ```
 project-root/
 ├── AGENTS.md                    # 🎯 Single source of truth (REQUIRED)
-├── .agents/                     # 📁 Modular context files (REQUIRED)
-│   ├── structure.md (OPTIONAL, example)            # Folder organization patterns
-│   ├── guidelines.md (OPTIONAL, example)           # Content management best practices
-│   ├── nomenclature.md  (OPTIONAL, example)        # Naming conventions
-│   └── [domain-specific].md    # Additional context as needed
+├── .agents/                     # 📁 Structured context and skills (REQUIRED)
+│   ├── context/                 # Modular context files
+│   │   ├── agentic-infra-setup.md   # This file — setup reference
+│   │   └── [domain-specific].md     # Additional context as needed
+│   ├── skills/                  # 🛠️ Skill definitions (single source of truth)
+│   │   ├── create-plan/SKILL.md
+│   │   ├── create-task/SKILL.md
+│   │   ├── update-plan/SKILL.md
+│   │   ├── whats-next/SKILL.md
+│   │   ├── create-learning/SKILL.md
+│   │   ├── setup-agentic-context/SKILL.md
+│   │   ├── setup-nested-plans-repo/SKILL.md
+│   │   └── review-agentic-infra/SKILL.md
+│   └── plans/                   # All project plans and tasks
+│       ├── _template/           # Templates for plans and tasks
+│       └── {PLAN_NAME}/         # One directory per plan
 ├── .cursor/
+│   ├── skills/                  # 🔗 Symlink → ../.agents/skills (OPTIONAL)
 │   └── rules/                   # 🖥️ Cursor Project Rules (OPTIONAL)
-│       ├── code_style.mdc (OPTIONAL, example)      # Code style rules
-│       ├── project_context.mdc (OPTIONAL, example) # Project-specific context rules
-│       └── [rule-name].mdc (OPTIONAL, example)     # Additional rules as needed
 ├── .github/
-│   └── copilot-instructions.md # 🤖 GitHub Copilot integration (OPTIONAL)
-├── CLAUDE.md                   # 🧠 Claude AI integration (OPTIONAL)
+│   └── copilot-instructions.md  # 🤖 GitHub Copilot integration (OPTIONAL)
+├── CLAUDE.md                    # 🧠 Claude AI integration (OPTIONAL)
 ├── .claude/
-│   └── commands/               # 🧠 Claude command wrappers (OPTIONAL)
+│   └── skills/                  # 🔗 Symlink → ../.agents/skills (OPTIONAL)
 └── [subdirectory]/
-    └── AGENTS.md               # 📄 Subdirectory-specific context (OPTIONAL)
+    └── AGENTS.md                # 📄 Subdirectory-specific context (OPTIONAL)
 ```
 
 ---
@@ -81,19 +90,17 @@ project-root/
 
 ## Platform-Specific Files
 
-### Cursor (.cursor/rules/) - Optional
+### Cursor (.cursor/) - Optional
 
-**Purpose**: Cursor IDE-specific behaviors and integration using Project Rules
+**Skills**: Symlink `.cursor/skills/` → `../.agents/skills` so Cursor reads skills from the single source of truth.
 
-**Location**: `.cursor/rules/` directory
+```bash
+ln -s ../.agents/skills .cursor/skills
+```
 
-**Key Principle**: Reference `AGENTS.md` as the primary context source, don't duplicate information
-
-**Modern Approach**: Use individual `.mdc` rule files instead of deprecated `.cursorrules`
+**Rules** (`.cursor/rules/`): Cursor IDE-specific behaviors using Project Rules. Use individual `.mdc` rule files. Reference `AGENTS.md` as the primary context source, don't duplicate information.
 
 **When to use**: Working with Cursor IDE
-
-**Note**: `.cursorrules` is deprecated and will be removed in future versions. Use Project Rules instead.
 
 ### GitHub Copilot (.github/copilot-instructions.md) - Optional
 
@@ -107,15 +114,19 @@ project-root/
 
 **When to use**: Using GitHub Copilot
 
-### Claude (CLAUDE.md) - Optional
+### Claude (CLAUDE.md + .claude/) - Optional
 
 **Purpose**: Claude-specific context and best practices
 
-**Location**: Project root
+**Location**: `CLAUDE.md` at project root, `.claude/` directory
 
-**Key Principle**: Reference `AGENTS.md` as the primary context source, don't duplicate information
+**Key Principle**: Reference `AGENTS.md` as the primary context source, don't duplicate information. The simplest `CLAUDE.md` is just `@AGENTS.md`.
 
-**Content**: Commands, core files, code style, testing, workflow
+**Skills**: Symlink `.claude/skills/` → `../.agents/skills` so Claude reads skills from the single source of truth.
+
+```bash
+ln -s ../.agents/skills .claude/skills
+```
 
 **Reference**: [Claude Code Best Practices](https://www.anthropic.com/engineering/claude-code-best-practices)
 
@@ -172,9 +183,9 @@ Based on your platform selections from the pre-setup questions:
 
 **For Cursor users:**
 ```bash
-mkdir -p .cursor/rules
-# Create .cursor/rules/project_context.mdc file
-# Create .cursor/rules/code_style.mdc file (optional)
+mkdir -p .cursor
+ln -s ../.agents/skills .cursor/skills
+# Optionally create .cursor/rules/ for Cursor-specific project rules
 ```
 
 **For GitHub Copilot users:**
@@ -187,8 +198,10 @@ mkdir -p .github/instructions
 
 **For Claude users:**
 ```bash
-# Create CLAUDE.md file
-# Optionally create .claude/commands wrappers that reference .agents/commands/*
+# Create CLAUDE.md with content: @AGENTS.md
+echo "@AGENTS.md" > CLAUDE.md
+mkdir -p .claude
+ln -s ../.agents/skills .claude/skills
 ```
 
 #### Step 5: Optionally Create Subdirectory AGENTS.md Files
@@ -214,7 +227,9 @@ Add these entries to your `.gitignore`:
 Use this checklist to verify your setup:
 
 - [ ] `AGENTS.md` exists at project root
-- [ ] `.agents/` directory exists with context files
+- [ ] `.agents/` directory exists with context files and skills
+- [ ] `.agents/skills/` contains skill definitions with SKILL.md files
+- [ ] Platform skill directories are symlinked to `.agents/skills/` (if applicable)
 - [ ] Platform-specific files created (based on your selections)
 - [ ] All files reference `AGENTS.md` as primary context source
 - [ ] No duplication of information between files
@@ -305,21 +320,13 @@ This project uses an agentic infrastructure structure. Always reference the main
 
 ### CLAUDE.md Template
 
+The simplest and recommended `CLAUDE.md` is:
+
 ```markdown
-# Claude Context for [Project Name]
-
-## Primary Context Source
-This project uses an agentic infrastructure structure. Always reference the main context file:
-
-**Primary Context**: `AGENTS.md` - Contains the single source of truth for understanding this repository's purpose, structure, and organization.
-
-**Detailed Context**: `.agents/` directory contains modular context files:
-- `.agents/file1.md` - [Description that defines when its useful to look into this]
-- `.agents/file2.md` - [Description that defines when its useful to look into this]
-- `.agents/file3.md` - [Description that defines when its useful to look into this]
-
-[Any CLAUDE-SPECIFIC context here. Make sure this is truly platform-specific, and anything else goes into reusable context files.]
+@AGENTS.md
 ```
+
+This uses Claude's `@`-reference syntax to include `AGENTS.md` as the primary context. Only add Claude-specific content if you have platform-specific instructions that don't belong in the shared `AGENTS.md`.
 
 ---
 

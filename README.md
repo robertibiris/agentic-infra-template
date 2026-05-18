@@ -48,16 +48,25 @@ Imagine: You clone a repo. You open Cursor. The AI already knows your folder str
 ```
 project-root/
 ├── AGENTS.md                    # Single source of truth (customize for your project)
+├── CLAUDE.md                    # Claude integration (references AGENTS.md)
 ├── .agents/
 │   ├── context/                 # Setup and reference docs
-│   ├── commands/                # Command definitions (create-plan, whats-next, etc.)
-│   ├── plans/                   # Plans and tasks (each plan in its own folder)
-│   │   ├── _template/           # Templates for new plans and tasks
-│   │   ├── README.md            # Documentation for the plans directory
-│   │   └── {PLAN_NAME}/         # Your plans go here
-│   └── scripts/                 # Setup scripts
+│   │   └── agentic-infra-setup.md   # Detailed setup guide
+│   ├── skills/                  # Skill definitions (single source of truth)
+│   │   ├── create-plan/SKILL.md
+│   │   ├── create-task/SKILL.md
+│   │   ├── update-plan/SKILL.md
+│   │   ├── whats-next/SKILL.md
+│   │   ├── create-learning/SKILL.md
+│   │   └── ...                  # Additional infra skills
+│   └── plans/                   # Plans and tasks (each plan in its own folder)
+│       ├── _template/           # Templates for new plans and tasks
+│       ├── README.md            # Documentation for the plans directory
+│       └── {PLAN_NAME}/         # Your plans go here
+├── .claude/
+│   └── skills/                  # Symlink → ../.agents/skills
 ├── .cursor/
-│   └── rules/                   # Cursor project rules (references AGENTS.md)
+│   └── skills/                  # Symlink → ../.agents/skills
 └── .github/
     └── copilot-instructions.md  # GitHub Copilot (optional, references AGENTS.md)
 ```
@@ -78,14 +87,14 @@ cd my-project
 ### 2. Customize
 
 - **Edit `AGENTS.md`** — Replace the stub content with your project's overview, structure, conventions, and workflow. This is the main file agents read.
-- **Add platform files** — If you use Cursor, ensure `.cursor/rules/` references `AGENTS.md`. For Copilot or Claude, add `.github/copilot-instructions.md` or `CLAUDE.md` that point to the same source.
+- **Add platform files** — For Cursor or Claude, create symlinks from `.cursor/skills/` and `.claude/skills/` to `.agents/skills/`. For Copilot, add `.github/copilot-instructions.md` referencing `AGENTS.md`.
 
 ### 3. Optional: Set Up Plans Version Control
 
 If you want to track your plans and tasks with git (without committing them to the main repo), run:
 
 ```bash
-bash .agents/scripts/setup_nested_plans_repo.sh
+bash .agents/skills/setup-nested-plans-repo/scripts/setup_nested_plans_repo.sh
 ```
 
 This creates a nested git repository in `.agents/plans/` so you can commit plan progress locally.
@@ -100,31 +109,33 @@ For detailed setup, platform-specific options, and best practices, see [`.agents
 
 ### Resuming Work
 
-Run `whats-next` (or its equivalent) to see the next actionable steps across all active plans. It scans your plans, finds active tasks, and tells you what to do next.
+Run the `whats-next` skill to see the next actionable steps across all active tracked plans. It scans your plans, finds active tasks, and tells you what to do next.
 
 ### Creating Work
 
-- **Create a plan** — Use `create-plan` to scaffold a new plan directory and `plan.md` with objectives, requirements, and steps.
-- **Create tasks** — Use `create-task` to add executable units under a plan.
+- **Create a plan** — Use the `create-plan` skill to scaffold a new plan directory and `plan.md` with objectives, requirements, and initial tasks.
+- **Create tasks** — Use the `create-task` skill to add executable units under a plan (with numeric prefix naming for execution order).
 
 ### Tracking Progress
 
-- **Update status** — Use `update-status` to change a plan or task status (`pending`, `active`, `paused`, `completed`) and append progress notes.
+- **Update plans** — Use the `update-plan` skill to change statuses, create new tasks, revise existing tasks, or complete plans.
+- **Capture learnings** — Use the `create-learning` skill to record non-obvious insights during or after plan execution.
 - **Progress notes** — Keep them reverse-chronological so the latest updates appear first.
 
-### Command Reference
+### Skills Reference
 
-| Command | Purpose |
-|---------|---------|
-| `whats-next` | Find next actionable steps across active plans |
-| `create-plan` | Scaffold a new plan directory and `plan.md` |
+| Skill | Purpose |
+|-------|---------|
+| `whats-next` | Find next actionable steps across active tracked plans |
+| `create-plan` | Scaffold a new plan directory with initial tasks |
 | `create-task` | Add a task file under an existing plan |
-| `update-status` | Change status and append progress notes |
+| `update-plan` | Change statuses, add tasks, revise tasks, or complete plans |
+| `create-learning` | Capture non-obvious insights as structured learnings |
 | `setup-nested-plans-repo` | Initialize nested git repo for plans |
 | `setup-agentic-context` | Bootstrap agentic infrastructure in a new repo |
 | `review-agentic-infra` | Audit agent infrastructure |
 
-Command definitions live in [`.agents/commands/`](.agents/commands/). Reference them from your editor (e.g. Cursor commands) so you keep a single source of truth.
+Skill definitions live in [`.agents/skills/`](.agents/skills/). Platform-specific skill directories (`.claude/skills/`, `.cursor/skills/`) are symlinked to `.agents/skills/` for a single source of truth.
 
 ---
 
@@ -132,9 +143,9 @@ Command definitions live in [`.agents/commands/`](.agents/commands/). Reference 
 
 | Platform | File(s) | Notes |
 |----------|---------|-------|
-| **Cursor** | `.cursor/rules/*.mdc` | Reference `AGENTS.md`; don't duplicate content |
+| **Cursor** | `.cursor/skills/` (symlink) | Skills symlinked from `.agents/skills/`; optional `.cursor/rules/` for IDE-specific rules |
 | **GitHub Copilot** | `.github/copilot-instructions.md` | Reference `AGENTS.md`; add Copilot-specific instructions only |
-| **Claude** | `CLAUDE.md` | Reference `AGENTS.md`; add Claude-specific instructions only |
+| **Claude** | `CLAUDE.md`, `.claude/skills/` (symlink) | `CLAUDE.md` references `AGENTS.md`; skills symlinked from `.agents/skills/` |
 
 ---
 
@@ -150,6 +161,6 @@ Command definitions live in [`.agents/commands/`](.agents/commands/). Reference 
 ## Further Reading
 
 - [`.agents/context/agentic-infra-setup.md`](.agents/context/agentic-infra-setup.md) — Full setup guide and best practices
-- [AGENTS.md](AGENTS.md) — Master reference for plans, tasks, commands, and workflow
+- [AGENTS.md](AGENTS.md) — Master reference for plans, tasks, skills, and workflow
 - [AGENTS.md pattern](https://agents.md/) — Official documentation for the AGENTS.md pattern
 - [Cursor Project Rules](https://cursor.com/docs/context/rules) — Cursor project rules documentation
