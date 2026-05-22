@@ -1,30 +1,21 @@
-# 🤖 Agentic Infrastructure Setup Guide
+# Agentic Infrastructure Setup Guide
 
-*A comprehensive guide for setting up AI agent infrastructure in any project, in a platform-agnostic manner (Cursor, Claude Code, Copilot, etc.).*
+A step-by-step guide for setting up AI agent infrastructure in any project, in a platform-agnostic manner (Cursor, Claude Code, Copilot, etc.).
 
 ---
 
-### Why Use This System?
+## System Overview
 
-**Benefits:**
-- **Consistency**: Same context structure across all projects
-- **Efficiency**: No need to re-explain project structure to each AI agent
-- **Portability**: Works with Cursor, GitHub Copilot, Claude, and other AI tools
-- **Maintainability**: Single source of truth that's easy to update
-- **Collaboration**: Team members and AI agents work from the same context
-
-### System Overview
-
-The complete agentic infrastructure system consists of:
+The agentic infrastructure gives AI agents and humans a shared, structured context so they can work effectively across sessions and platforms. The system has three layers: context (what the project is), skills (what agents can do), and plans (what's being worked on).
 
 ```
 project-root/
-├── AGENTS.md                    # 🎯 Single source of truth (REQUIRED)
-├── .agents/                     # 📁 Structured context and skills (REQUIRED)
-│   ├── context/                 # Modular context files
-│   │   ├── agentic-infra-setup.md   # This file — setup reference
+├── AGENTS.md                        # Single source of truth (REQUIRED)
+├── .agents/                         # Structured context, skills, and plans (REQUIRED)
+│   ├── context/                     # Reference docs
+│   │   ├── agentic-infra-setup.md   # This file
 │   │   └── [domain-specific].md     # Additional context as needed
-│   ├── skills/                  # 🛠️ Skill definitions (single source of truth)
+│   ├── skills/                      # Skill definitions (single source of truth)
 │   │   ├── create-plan/SKILL.md
 │   │   ├── create-task/SKILL.md
 │   │   ├── update-plan/SKILL.md
@@ -33,19 +24,17 @@ project-root/
 │   │   ├── setup-agentic-context/SKILL.md
 │   │   ├── setup-nested-plans-repo/SKILL.md
 │   │   └── review-agentic-infra/SKILL.md
-│   └── plans/                   # All project plans and tasks
-│       ├── _template/           # Templates for plans and tasks
-│       └── {PLAN_NAME}/         # One directory per plan
-├── .cursor/
-│   ├── skills/                  # 🔗 Symlink → ../.agents/skills (OPTIONAL)
-│   └── rules/                   # 🖥️ Cursor Project Rules (OPTIONAL)
-├── .github/
-│   └── copilot-instructions.md  # 🤖 GitHub Copilot integration (OPTIONAL)
-├── CLAUDE.md                    # 🧠 Claude AI integration (OPTIONAL)
+│   └── plans/                       # Tracked plans and tasks
+│       ├── _template/               # Templates for plans, tasks, learnings
+│       └── {PLAN_NAME}/             # One directory per plan
+├── CLAUDE.md                        # Claude integration (OPTIONAL)
 ├── .claude/
-│   └── skills/                  # 🔗 Symlink → ../.agents/skills (OPTIONAL)
-└── [subdirectory]/
-    └── AGENTS.md                # 📄 Subdirectory-specific context (OPTIONAL)
+│   └── skills/                      # Symlink → ../.agents/skills (OPTIONAL)
+├── .cursor/
+│   ├── skills/                      # Symlink → ../.agents/skills (OPTIONAL)
+│   └── rules/                       # Cursor project rules (OPTIONAL)
+└── .github/
+    └── copilot-instructions.md      # GitHub Copilot integration (OPTIONAL)
 ```
 
 ---
@@ -54,379 +43,142 @@ project-root/
 
 ### AGENTS.md (Required)
 
-**Purpose**: Single source of truth for project context
+The single source of truth for project context. Lives at the project root. Contains the tracked plans overview, key terminology, infrastructure description, skills index, resuming guidance, and assistant behavior requirements.
 
-**Location**: Project root (mandatory)
-
-**What to include**:
-- Project overview and purpose
-- Directory structure explanation
-- Coding standards and conventions
-- Development workflow
-- Testing procedures
-- Deployment process
-- References to detailed context in `.agents/` directory
-
-**Reference**: Based on the [AGENTS.md pattern](https://agents.md/) with custom modifications
-
-**Custom Rule**: Additional `AGENTS.md` files can be placed in subdirectories for folder-specific context, but the root-level file is mandatory.
+Based on the [AGENTS.md pattern](https://agents.md/). Additional `AGENTS.md` files can be placed in subdirectories for folder-specific context, but the root-level file is mandatory.
 
 ### .agents/ Directory (Required)
 
-**Purpose**: Modular context files for detailed guidance
+Houses all structured context, organized into three areas:
 
-**Location**: Project root
+**`context/`** — Reference documentation. This setup guide lives here. Add domain-specific context files as your project grows (e.g., `architecture.md`, `commit-guidelines.md`). Keep context files inside this subdirectory, not at the `.agents/` root level.
 
-**Suggested files**:
-- `structure.md` - Folder organization patterns and file handling (Optional)
-- `guidelines.md` - Content management best practices (Optional)
-- `nomenclature.md` - (Optional) Naming conventions and standards
-- `commit-guidelines.md` - (Optional) Git commit message standards
-- `[domain-specific].md` - Add context files as needed for your project
+**`skills/`** — Skill definitions. Each skill is a directory containing a `SKILL.md` file with YAML frontmatter:
 
-**Flexibility**: Add domain-specific context files as your project grows
+```markdown
+---
+name: skill-name
+description: "What the skill does, when to use it, trigger phrases. This is the
+  primary triggering mechanism — it must be thorough enough that the agent
+  recognizes when to use it from natural language."
+---
+
+[Skill instructions — inputs, behavior, side effects, notes]
+```
+
+The template ships with 8 infra skills for plan management, setup, and auditing. Project-specific skills (e.g., deployment, testing) can be added alongside them.
+
+**`plans/`** — Tracked plans and tasks. Each plan is a directory containing `plan.md` and numbered task files (`{NN}-{TASK_NAME}.md`). Templates live in `_template/`. Plans are typically git-ignored by the main repo and optionally tracked by a nested git repository (see the `setup-nested-plans-repo` skill).
 
 ---
 
-## Platform-Specific Files
+## Platform Integration
 
-### Cursor (.cursor/) - Optional
+Platform-specific directories use **symlinks** to `.agents/skills/` so all platforms read skill definitions from a single source of truth.
 
-**Skills**: Symlink `.cursor/skills/` → `../.agents/skills` so Cursor reads skills from the single source of truth.
+### Cursor
 
-```bash
-ln -s ../.agents/skills .cursor/skills
-```
-
-**Rules** (`.cursor/rules/`): Cursor IDE-specific behaviors using Project Rules. Use individual `.mdc` rule files. Reference `AGENTS.md` as the primary context source, don't duplicate information.
-
-**When to use**: Working with Cursor IDE
-
-### GitHub Copilot (.github/copilot-instructions.md) - Optional
-
-**Purpose**: Repository-level custom instructions for Copilot
-
-**Location**: `.github/` directory
-
-**Key Principle**: Reference `AGENTS.md` as the primary context source, don't duplicate information
-
-**Reference**: [GitHub Copilot Custom Instructions](https://docs.github.com/en/copilot/how-tos/configure-custom-instructions/add-repository-instructions)
-
-**When to use**: Using GitHub Copilot
-
-### Claude (CLAUDE.md + .claude/) - Optional
-
-**Purpose**: Claude-specific context and best practices
-
-**Location**: `CLAUDE.md` at project root, `.claude/` directory
-
-**Key Principle**: Reference `AGENTS.md` as the primary context source, don't duplicate information. The simplest `CLAUDE.md` is just `@AGENTS.md`.
-
-**Skills**: Symlink `.claude/skills/` → `../.agents/skills` so Claude reads skills from the single source of truth.
-
-```bash
-ln -s ../.agents/skills .claude/skills
-```
-
-**Reference**: [Claude Code Best Practices](https://www.anthropic.com/engineering/claude-code-best-practices)
-
-**When to use**: Working with Claude Code or Claude AI
-
----
-
-## Step-by-Step Setup
-
-### Pre-Setup Questions
-
-Before starting, answer these questions:
-
-1. **Which AI platforms will you be using?**
-   - [ ] Cursor IDE
-   - [ ] GitHub Copilot
-   - [ ] Claude AI/Code
-   - [ ] Other: _______________
-
-2. **Does your project have subdirectories that need specific AGENTS.md files?**
-   - [ ] Yes, I have subdirectories with distinct contexts
-   - [ ] No, root-level context is sufficient
-   - [ ] I'm not sure (we'll analyze AFTER setup)
-
-3. **What specialized context files would you like to set up?**
-   - [ ] commit_guidelines.md context
-   - [ ] project_architecture.md context
-   - [ ] project_status.md context
-   - [ ] No need for this yet.
-   - [ ] I'm not sure (we'll analyze AFTER setup)
-
-### Setup Steps
-
-#### Step 1: Create AGENTS.md at Project Root
-
-Create the main context file using the template below (see Templates section).
-
-#### Step 2: Create .agents/ Directory
-
-```bash
-mkdir .agents
-```
-
-#### Step 3: Add Modular Context Files
-
-Create the essential context files inside `.agents/` according to each project's needs. You can skip this for initial setup or suggest some files as well (for example: commit guidelines, project architecture).
-Examples:
-- `.agents/commit_guidelines.md`
-- `.agents/current_project_progress.md`
-
-#### Step 4: Add Platform-Specific Files
-
-Based on your platform selections from the pre-setup questions:
-
-**For Cursor users:**
 ```bash
 mkdir -p .cursor
 ln -s ../.agents/skills .cursor/skills
-# Optionally create .cursor/rules/ for Cursor-specific project rules
 ```
 
-**For GitHub Copilot users:**
-```bash
-mkdir -p .github
-# Create .github/copilot-instructions.md file
-mkdir -p .github/instructions
-# Create .github/instructions directory for special context files (like in .agents/ dir, but for copilot)
-```
+Optionally add `.cursor/rules/*.mdc` for Cursor-specific project rules. Rules should reference `AGENTS.md`, not duplicate its content.
 
-**For Claude users:**
+### Claude
+
 ```bash
-# Create CLAUDE.md with content: @AGENTS.md
 echo "@AGENTS.md" > CLAUDE.md
 mkdir -p .claude
 ln -s ../.agents/skills .claude/skills
 ```
 
-#### Step 5: Optionally Create Subdirectory AGENTS.md Files
+`CLAUDE.md` uses the `@`-reference syntax to include `AGENTS.md`. Only add Claude-specific content if truly platform-specific.
 
-If you identified subdirectories that need specific context, create `AGENTS.md` files in those directories.
+Reference: [Claude Code Best Practices](https://www.anthropic.com/engineering/claude-code-best-practices)
 
-NOTE: When using Claude, you can create subdirectory `CLAUDE.md` files in the same way. To avoid duplicate logic, they should only reference the sibling `AGENTS.md` file in the same subdirectory.
+### GitHub Copilot
 
-#### Step 6: Add .gitignore Entries (if using Git)
+```bash
+mkdir -p .github
+# Create .github/copilot-instructions.md referencing AGENTS.md
+```
 
-Add these entries to your `.gitignore`:
+Reference: [GitHub Copilot Custom Instructions](https://docs.github.com/en/copilot/how-tos/configure-custom-instructions/add-repository-instructions)
+
+---
+
+## Step-by-Step Setup
+
+### Step 1: Create AGENTS.md
+
+Create `AGENTS.md` at the project root. Use this template's own `AGENTS.md` as a starting point — replace the stub content with your project's overview, structure, conventions, and workflow. The key sections to fill in are:
+
+- **Tracked Plans Overview** — keep as-is unless you modify the plans system
+- **Agentic Infrastructure Description** — update the `.agents/context/` references for your project's context files
+- **Skills Index** — add any project-specific skills alongside the infra skills
+- **Assistant Behavior Requirements** — add project-specific rules as needed
+
+### Step 2: Set up .agents/ directory
+
+```bash
+mkdir -p .agents/context .agents/skills .agents/plans/_template
+```
+
+Copy or adapt the template's skill definitions and plan templates. If starting from this template project, these are already in place.
+
+### Step 3: Add context files
+
+Create context files inside `.agents/context/` for your project's specific needs. Examples: `architecture.md`, `commit-guidelines.md`, `api-conventions.md`. Each file should cover one topic and be referenced from `AGENTS.md`.
+
+### Step 4: Set up platform integrations
+
+Based on which AI platforms you use, create the appropriate symlinks and config files (see the Platform Integration section above).
+
+### Step 5: Configure .gitignore
+
+Plans are typically developer-specific and should be git-ignored. The template's `.gitignore` already handles this:
 
 ```gitignore
-# AI Agent context files (optional - you may want to track these)
-# .agents/
-# AGENTS.md
-# .cursor/
-# CLAUDE.md
+# Ignore plans (developer-specific), but keep shared infrastructure
+.agents/plans/*
+!.agents/plans/README.md
+!.agents/plans/AGENTS.md
+!.agents/plans/_template
+!.agents/plans/_template/
+!.agents/plans/_template/**
 ```
 
-#### Step 7: Verify Setup
+### Step 6: Optional — set up nested plans repo
 
-Use this checklist to verify your setup:
+If you want local version control for your plans:
 
-- [ ] `AGENTS.md` exists at project root
-- [ ] `.agents/` directory exists with context files and skills
-- [ ] `.agents/skills/` contains skill definitions with SKILL.md files
-- [ ] Platform skill directories are symlinked to `.agents/skills/` (if applicable)
-- [ ] Platform-specific files created (based on your selections)
-- [ ] All files reference `AGENTS.md` as primary context source
-- [ ] No duplication of information between files
-- [ ] Context files are clear and actionable
-
----
-
-## Templates
-
-### AGENTS.md Template
-
-```markdown
-# 🤖 Agentic Context - [Project Name]
-
-## Project Overview
-
-[Brief description of what this project does and its main purpose]
-
-## Detailed Context Files
-
-For specific implementation details, refer to the modular context files in the `.agents/` directory:
-
-- **`.agents/file1.md`**: [Description that defines when its useful to look into this context file]
-- **`.agents/file2.md`**: [Description that defines when its useful to look into this context file]
-- **`.agents/file3.md`**: [Description that defines when its useful to look into this context file]
-
-## [Project-Specific Sections]
-
-[Add sections specific to your project type]
-
----
-
-*This context file serves as the single source of truth for understanding this project structure. Platform-specific implementations should reference this file while adding their own behavioral guidelines.*
+```bash
+bash .agents/skills/setup-nested-plans-repo/scripts/setup_nested_plans_repo.sh
 ```
 
-### .cursor/rules/ Templates
+This creates a nested git repository in `.agents/plans/` so you can commit plan progress independently.
 
-**Project Context Rule** (`.cursor/rules/project_context.mdc`):
+### Step 7: Verify
 
-```mdc
----
-description: Project context and agentic structure reference
-globs: "*"
-alwaysApply: true
----
-
-# Project Context Reference
-
-This project uses an agentic infrastructure structure. Always reference the main context file:
-
-**Primary Context**: `AGENTS.md` - Contains the single source of truth for understanding this repository's purpose, structure, and organization.
-
-**Detailed Context**: `.agents/` directory contains modular context files:
-- `.agents/file1.md` - [Description that defines when its useful to look into this context file]
-- `.agents/file2.md` - [Description that defines when its useful to look into this context file]
-- `.agents/file3.md` - [Description that defines when its useful to look into this context file]
-```
-
-**Code Style Rule** (`.cursor/rules/code_style.mdc`) - Optional:
-
-```mdc
----
-description: Code style and formatting guidelines
-globs: "*.js,*.ts,*.py,*.go,*.rs"
-alwaysApply: true
----
-
-For Code style rules check [.agents/code_style.md]
-```
-This example outlines the fact that local rules that have a source of truth inside `.agents/` should refer to the source, and not duplicate the context, but may have platform-specific files that only reference the real sources of truth
-
-### .github/copilot-instructions.md Template
-
-```markdown
-# GitHub Copilot Instructions for [Project Name]
-
-## Primary Context Source
-This project uses an agentic infrastructure structure. Always reference the main context file:
-
-**Primary Context**: `AGENTS.md` - Contains the single source of truth for understanding this repository's purpose, structure, and organization.
-
-**Detailed Context**: `.agents/` directory contains modular context files:
-- `.agents/file1.md` - [Description that defines when its useful to look into this]
-- `.agents/file2.md` - [Description that defines when its useful to look into this]
-- `.agents/file3.md` - [Description that defines when its useful to look into this]
-[Any COPILOT-SPECIFIC context here. Make sure this is truly platform-specific, and anything else goes into reusable context files.]
-```
-
-### CLAUDE.md Template
-
-The simplest and recommended `CLAUDE.md` is:
-
-```markdown
-@AGENTS.md
-```
-
-This uses Claude's `@`-reference syntax to include `AGENTS.md` as the primary context. Only add Claude-specific content if you have platform-specific instructions that don't belong in the shared `AGENTS.md`.
+- [ ] `AGENTS.md` exists at project root with project-specific content
+- [ ] `.agents/context/` contains this setup guide and any project context files
+- [ ] `.agents/skills/` contains skill directories with `SKILL.md` files
+- [ ] `.agents/plans/_template/` contains plan and task templates
+- [ ] Platform symlinks resolve correctly (e.g., `ls .claude/skills/` shows skills)
+- [ ] `CLAUDE.md` or equivalent platform file references `AGENTS.md`
+- [ ] No information is duplicated between platform files and `AGENTS.md`
 
 ---
 
 ## Best Practices
 
-### Core Principles
+**Single source of truth** — `AGENTS.md` is the master reference. Platform files and context docs should reference it, not duplicate it.
 
-1. **Single Source of Truth**: Keep `AGENTS.md` as the primary context source
-2. **Modular Design**: Use `.agents/` directory for detailed, specific guidance, or AGENTS.md within subfolders, for keeping AGENTS.md lean, yet useful.
-3. **Platform Separation**: Platform-specific files should reference, not duplicate, core context
-4. **Consistency**: Maintain consistent structure across all context files
-5. **Clarity**: Write clear, actionable instructions that both humans and AI agents can understand
+**Modular context** — Keep `AGENTS.md` concise. Detailed guidance belongs in `.agents/context/` files. Each context file should cover one topic.
 
-### Maintenance Guidelines
+**Skills over prose** — When agents need to perform a repeatable action, define it as a skill with clear inputs, behavior, and side effects. This is more reliable than embedding instructions in context files.
 
-- **Keep AGENTS.md concise**: Detailed information belongs in `.agents/` files
-- **Update context files as project evolves**: Context should reflect current project state
-- **Use subdirectory AGENTS.md sparingly**: Only when folder-specific context is truly needed
-- **Avoid duplication**: Platform files should reference core context, not repeat it
-- **Regular review**: Periodically review and update context files
+**Platform separation** — Platform-specific files (`.cursor/rules/`, `CLAUDE.md`) should only contain truly platform-specific instructions. Everything else goes in `.agents/`.
 
-### File Organization Tips
-
-- **Start simple**: Begin with essential files, add complexity as needed
-- **Group related information**: Keep similar guidance in the same context file
-- **Use descriptive names**: Context file names should clearly indicate their purpose
-- **Maintain hierarchy**: Respect the established file organization patterns
-
----
-
-## Real-World Example
-
-### Racks Academy Implementation
-
-The Racks Academy AI Course Repository serves as a real-world example of this agentic infrastructure system:
-
-**Project Type**: Educational content repository
-
-**Key Decisions Made**:
-1. **Spanish Language Preservation**: All folder/file names maintain Spanish language
-2. **Hierarchical Structure**: Three-level organization (Aula/Seccion/Leccion)
-3. **Video File Exclusion**: Large video files excluded from Git tracking
-4. **Educational Focus**: Context emphasizes learning progression and content management
-
-**Structure**:
-```
-Racks Academy/
-├── AGENTS.md                    # Single source of truth
-├── .agents/
-│   ├── structure.md            # Folder organization patterns
-│   ├── guidelines.md           # Content management best practices
-│   ├── nomenclature.md         # Spanish naming conventions
-│   └── curso_ai_catalogo.md    # Course catalog reference
-├── .cursor/rules/              # Cursor-specific behaviors
-└── Aula_XX_Nombre/             # Educational content structure
-```
-
-**Adaptation for Different Project Types**:
-
-**Web Application**:
-- Focus on code organization, API structure, and deployment
-- Include frontend/backend separation in structure.md
-- Add testing guidelines specific to web development
-
-**Library/Package**:
-- Emphasize API documentation and versioning
-- Include contribution guidelines in guidelines.md
-- Focus on code quality and backward compatibility
-
-**CLI Tool**:
-- Include command structure and help system
-- Focus on user experience and error handling
-- Add installation and distribution guidelines
-
-**Data Science Project**:
-- Include data organization and preprocessing
-- Focus on reproducibility and documentation
-- Add model versioning and experiment tracking
-
----
-
-## References
-
-### Official Documentation
-
-- **[AGENTS.md Pattern](https://agents.md/)**: Official documentation for the AGENTS.md pattern
-- **[GitHub Copilot Custom Instructions](https://docs.github.com/en/copilot/how-tos/configure-custom-instructions/add-repository-instructions)**: Official guide for GitHub Copilot repository instructions
-- **[Claude Code Best Practices](https://www.anthropic.com/engineering/claude-code-best-practices)**: Official Claude coding best practices documentation
-
-### Community Resources
-
-- **[AGENTS.md Examples](https://github.com/search?q=AGENTS.md)**: Search GitHub for real-world AGENTS.md examples
-- **[Cursor Project Rules](https://cursor.com/docs/context/rules)**: Official Cursor Project Rules documentation
-- **[AI Coding Agent Best Practices](https://github.com/topics/ai-coding)**: Community discussions and examples
-
-### Examples from Popular Projects
-
-- **[OpenAI Codex](https://github.com/openai/codex)**: Example of comprehensive agent context
-- **[Apache Airflow](https://github.com/apache/airflow)**: Large project with multiple AGENTS.md files
-
----
-
-*This guide is part of the agentic infrastructure system. It can be copied to any project and customized for specific needs.*
+**Regular audits** — Use the `review-agentic-infra` skill periodically to check for inconsistencies, stale references, and structural issues.
