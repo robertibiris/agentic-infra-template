@@ -24,7 +24,10 @@ None.
 ## Expected outcomes
 
 - `AGENTS.md` exists at the project root and acts as the single source of truth.
-- `.agents/` contains modular context and skills.
+- `.agents/` contains modular shared context and skills.
+- `.agents/local/` exists with its README and outer-tracked `context/`, `skills/`, and `plans/` placeholders.
+- Developer-owned local content is ignored by the outer repository and may optionally be versioned through `setup-local-repo`.
+- Tracked plans live under `.agents/local/plans/`; their templates remain with the shared skills that consume them.
 - Platform-specific skill directories are symlinked to `.agents/skills/` for single source of truth.
 
 ## Side effects

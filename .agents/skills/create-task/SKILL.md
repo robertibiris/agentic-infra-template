@@ -1,13 +1,13 @@
 ---
 name: create-task
-description: "Add a task file under an existing tracked plan (persisted plan, nested plan), populate it from the Task File Template, and insert a reference in the parent plan's Tasks list. This is an infra skill — it does NOT use the agent's built-in planning; it creates files under .agents/plans/. Use when adding a standalone task to an existing tracked plan mid-work. Triggers on: 'create task', 'add task', 'new task for plan', 'add task to tracked plan', or when decomposing a tracked plan into smaller units of work."
+description: "Add a task file under an existing tracked plan (persisted plan, nested plan), populate it from the Task File Template, and insert a reference in the parent plan's Tasks list. This is an infra skill — it does NOT use the agent's built-in planning; it creates files under .agents/local/plans/. Use when adding a standalone task to an existing tracked plan mid-work. Triggers on: 'create task', 'add task', 'new task for plan', 'add task to tracked plan', or when decomposing a tracked plan into smaller units of work."
 ---
 
 Add a task file under an existing tracked plan and insert a reference in the parent plan's Tasks list.
 
 ## Inputs
 
-- `plan_name` (required) — target plan directory under `.agents/plans/`.
+- `plan_name` (required) — target plan directory under `.agents/local/plans/`.
 - `task_name` (required) — descriptive slug for the task (without numeric prefix or extension).
 - `purpose` (required) — short description inserted into the "Purpose" section of the task file.
 - `position` (optional) — where this task falls in the sequence. If not provided, append after the last existing task.
@@ -63,12 +63,12 @@ Deeper nesting is allowed for subsequent insertions within insertions:
 
 ## Behavior
 
-1. Validate that `.agents/plans/{PLAN_NAME}` exists and that the target filename does not already exist; abort if either check fails.
+1. Validate that `.agents/local/plans/{PLAN_NAME}` exists and that the target filename does not already exist; abort if either check fails.
 2. Determine the numeric prefix:
    - If this is the first task: use `01`.
    - If appending after existing tasks: use the next sequential number.
    - If inserting between existing tasks: use dot notation based on the surrounding task numbers.
-3. Generate the task file using the Task Template (templates at `.agents/plans/_template`):
+3. Generate the task file using the skill-owned template at `.agents/skills/create-task/templates/task.md`:
    - Set `belongs_to_plan` to the parent plan name.
    - Initialize `status: active` (or `pending` if it depends on earlier tasks).
    - Populate `created` and `updated` using the canonical timestamp format: `YYYY-MM-DD HH:MM TZ`.

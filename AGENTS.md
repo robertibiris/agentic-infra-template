@@ -7,9 +7,9 @@ with the details of the REAL project.
 
 ## Tracked Plans Overview
 
-In this repository a **tracked plan** refers to a file-based plan under `.agents/plans/`, not an agent's built-in planning feature.
+In this repository a **tracked plan** refers to a file-based plan under `.agents/local/plans/`, not an agent's built-in planning feature.
 
-- **Tracked plan**: A bounded initiative documented in `plan.md` under `.agents/plans/{PLAN_NAME}`. Plans contain the intent, requirements, high-level steps, links to their tasks, and a reverse-chronological progress log.
+- **Tracked plan**: A bounded initiative documented in `plan.md` under `.agents/local/plans/{PLAN_NAME}`. Plans contain the intent, requirements, high-level steps, links to their tasks, and a reverse-chronological progress log.
 - **Task**: An executable unit inside the same plan folder (`{NN}-{TASK_NAME}.md`). Tasks reference their parent plan, list concrete steps, outputs, dependencies, and track progress notes the same way plans do. Task files use a zero-padded numeric prefix for execution order (see `create-task` skill for naming convention).
 - **Learning**: Insights captured during plan execution, stored in `learnings.md` within each plan directory. Cross-cutting reference docs live in `_learnings/`. Use the `create-learning` skill to create interactively.
 - **Status**: `pending`, `active`, `paused`, or `completed`. Status is stored in each file's front-matter block and is updated whenever work is waiting to be picked up (`pending`), currently in progress (`active`), temporarily halted (`paused`), or done (`completed`).
@@ -20,7 +20,8 @@ In this repository a **tracked plan** refers to a file-based plan under `.agents
 
 | Canonical term | Aliases | Meaning |
 | --- | --- | --- |
-| **Tracked plan** | persisted plan, nested plan, custom plan | A file-based plan under `.agents/plans/` — NOT the agent's built-in planning |
+| **Tracked plan** | persisted plan, nested plan, custom plan | A file-based plan under `.agents/local/plans/` — NOT the agent's built-in planning |
+| **Local directory** | local repo, developer space | Git-ignored developer-owned content under `.agents/local/`, optionally versioned in its own nested repository |
 | **Infra skills** | infrastructure skills, agent infra skills | Skills for managing agentic infrastructure |
 
 ## Agentic Infrastructure Description
@@ -28,13 +29,14 @@ In this repository a **tracked plan** refers to a file-based plan under `.agents
 - `AGENTS.md` (this file) is the master reference. It never lists active plans; instead it documents how to use the system.
 - `.agents/` stores all structured context:
   - `.agents/context/agentic-infra-setup.md` provides the detailed reference for setting up and auditing the agentic infrastructure. Consult it when cloning this template or when auditing an existing repo.
-  - `.agents/skills/` holds skill definitions. Each skill is a directory containing a `SKILL.md` with YAML frontmatter (name, description) and instructions. Platform-specific skill directories (`.claude/skills/`, `.cursor/skills/`) are symlinked to `.agents/skills/` so all platforms read from the same source of truth.
-  - `.agents/plans/` groups every plan by name. Each plan directory contains:
+  - `.agents/skills/` holds skill definitions. Each skill is a directory containing a `SKILL.md` with YAML frontmatter (name, description) and instructions. Templates used by one skill live with that skill. Platform-specific skill directories (`.claude/skills/`, `.cursor/skills/`) are symlinked to `.agents/skills/` so all platforms read from the same source of truth.
+  - `.agents/local/` is the developer-owned space for content that is useful locally but should not be committed to the main repository. It starts with `context/`, `skills/`, and `plans/`, may contain other local files, and can optionally be versioned through the `setup-local-repo` skill.
+  - `.agents/local/plans/` groups every tracked plan by name. Each plan directory contains:
     - `plan.md` – metadata, objectives, requirements, steps, tasks summary, and progress log.
     - `{NN}-{TASK_NAME}.md` – one file per task with metadata, steps, outputs, dependencies, and progress notes. Files use a numeric prefix for execution order.
-  - `learnings.md` (optional) – plan-specific insights discovered during execution.
-  - `_learnings/` – cross-cutting reference documents (topic-named, not tied to any single plan).
-    - **Nested Repository (Optional)**: It's recommended to set up a nested git repository in `.agents/plans/` for local version control of plans. Since plans are ignored by the main repository, a nested repo allows developers to track plan progress independently. See the `setup-nested-plans-repo` skill for setup instructions.
+    - `learnings.md` (optional) – plan-specific insights discovered during execution.
+  - `.agents/local/plans/_learnings/` stores cross-cutting reference documents (topic-named, not tied to any single plan).
+- The optional nested repository belongs at `.agents/local/`, not inside `plans/`. This lets one local history cover plans, personal context, experimental skills, scratch work, and other developer-specific state without exposing those files to the outer repository.
 - Plans and tasks must not be merged together; every concern has its own file. Metadata, timestamps, and note ordering must stay consistent across the hierarchy.
 
 ## Skills Index
@@ -50,13 +52,13 @@ In this repository a **tracked plan** refers to a file-based plan under `.agents
 ### Infra skills (infrastructure setup and maintenance)
 
 - **`.agents/skills/setup-agentic-context/`** — Bootstrap agentic infrastructure in a new repo
-- **`.agents/skills/setup-nested-plans-repo/`** — Initialize a nested git repository in `.agents/plans/` for local version control of plans
+- **`.agents/skills/setup-local-repo/`** — Initialize a nested git repository in `.agents/local/` for developer-owned content
 - **`.agents/skills/review-agentic-infra/`** — Review and audit agent infrastructure
 
 ## Guidance for Resuming Work
 
 1. Run the `whats-next` skill to list every active tracked plan and its next actionable task.
-2. Open the indicated `plan.md` or task file.
+2. Open the indicated `plan.md` or task file under `.agents/local/plans/`.
 3. Review the latest progress notes (remember they are reverse chronological).
 4. Continue execution, update steps or requirements if needed, and append a new progress entry with timestamps before pausing or completing the work.
 

@@ -1,14 +1,14 @@
 ---
 name: whats-next
-description: "Surface the next actionable steps across every active tracked plan (persisted plan, nested plan) so work can resume without ambiguity. This is an infra skill that reads file-based tracked plans under .agents/plans/ — not the agent's built-in planning. Use when resuming work, starting a new session, or when unsure what to work on next. Triggers on: 'what's next', 'whats next', 'what should I do', 'resume work', 'show active plans', 'show tracked plans', or at the start of any work session to orient."
+description: "Surface the next actionable steps across every active tracked plan (persisted plan, nested plan) so work can resume without ambiguity. This is an infra skill that reads file-based tracked plans under .agents/local/plans/ — not the agent's built-in planning. Use when resuming work, starting a new session, or when unsure what to work on next. Triggers on: 'what's next', 'whats next', 'what should I do', 'resume work', 'show active plans', 'show tracked plans', or at the start of any work session to orient."
 ---
 
 Surface the next actionable steps across every active plan so work can resume without ambiguity.
 
 ## Behavior
 
-1. Enumerate plan directories by direct filesystem listing of `.agents/plans/` (not ignore-aware search), then inspect each `{PLAN_NAME}/plan.md`.
-   - Exclude non-plan entries such as `_template`, `.git`, `README.md`, `AGENTS.md`, and hidden/system files.
+1. Enumerate plan directories by direct filesystem listing of `.agents/local/plans/` (not ignore-aware search), then inspect each `{PLAN_NAME}/plan.md`.
+   - Exclude non-plan entries such as `_learnings`, `.gitkeep`, and hidden/system files.
    - Skip plans marked `completed`.
    - Be wise: you do not need to read all content in each `plan.md` if you only need the status line at first.
 2. For each active plan:

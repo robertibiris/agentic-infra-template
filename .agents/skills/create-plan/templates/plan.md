@@ -6,13 +6,13 @@ created: {YYYY-MM-DD HH:MM TZ}
 updated: {YYYY-MM-DD HH:MM TZ}
 
 ## Objective
-{Describe the plan’s intention and success criteria.}
+{Describe the plan's intention and success criteria.}
 
 ## Tasks
 - {TASK_NAME}.md — {status summary}
 - {Another task}.md — {status summary}
 
-{Add here anything else you think necessary to include in the plan, you can create other markdown sections or elements if you want}
+{Add any other sections needed for the plan.}
 
 ## Progress Notes
 - {YYYY-MM-DD HH:MM TZ} — {Most recent update first}

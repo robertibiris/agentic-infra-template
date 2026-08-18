@@ -28,7 +28,7 @@ Imagine: You clone a repo. You open Cursor. The AI already knows your folder str
 
 **One source of truth, many agents.** You might use Cursor today, Claude tomorrow, and Copilot in another project. Instead of maintaining separate instructions for each, you keep a single context—`AGENTS.md` and `.agents/`—that every tool reads from. Same structure, same conventions, no drift.
 
-**Collaboration without chaos.** Shared context means everyone on the project—humans and AI—works from the same understanding. At the same time, each person can have their own plans and progress. The nested repo lets you version-control your plans locally without cluttering the main repo or stepping on teammates' work. Shared context for the team, personal context for you, and they don't collide.
+**Collaboration without chaos.** Shared context means everyone on the project—humans and AI—works from the same understanding. At the same time, each person gets a private `.agents/local/` space for plans, personal context, experimental skills, and workflow state. Its optional nested repository keeps local history without cluttering the main project or stepping on teammates' work.
 
 **Complex work across many sessions.** Some initiatives take days or weeks and span dozens of agent sessions. Agents forget between sessions; plans and progress notes don't. You document what you're doing, where you left off, and what's next. When you resume, you (or any agent) run `whats-next` and pick up exactly where you were.
 
@@ -39,7 +39,8 @@ Imagine: You clone a repo. You open Cursor. The AI already knows your folder str
 - **Shared context** — `AGENTS.md` as the single source of truth; `.agents/` for modular, detailed guidance
 - **Plans & tasks** — Structured way to track initiatives and executable units with status and progress notes
 - **Platform support** — Works with Cursor, GitHub Copilot, Claude; each platform references the same context
-- **Optional nested repo** — Version-control your plans locally without committing them to the main project
+- **Local developer space** — Keep plans, personal context, experimental skills, and workflow state outside the main project history
+- **Optional nested repo** — Version-control the entire local developer space independently
 
 ---
 
@@ -52,17 +53,23 @@ project-root/
 ├── .agents/
 │   ├── context/                 # Setup and reference docs
 │   │   └── agentic-infra-setup.md   # Detailed setup guide
-│   ├── skills/                  # Skill definitions (single source of truth)
-│   │   ├── create-plan/SKILL.md
-│   │   ├── create-task/SKILL.md
+│   ├── skills/                  # Skill definitions and skill-owned templates
+│   │   ├── create-plan/
+│   │   │   ├── SKILL.md
+│   │   │   └── templates/plan.md
+│   │   ├── create-task/
+│   │   │   ├── SKILL.md
+│   │   │   └── templates/task.md
 │   │   ├── update-plan/SKILL.md
 │   │   ├── whats-next/SKILL.md
 │   │   ├── create-learning/SKILL.md
+│   │   ├── setup-local-repo/SKILL.md
 │   │   └── ...                  # Additional infra skills
-│   └── plans/                   # Plans and tasks (each plan in its own folder)
-│       ├── _template/           # Templates for new plans and tasks
-│       ├── README.md            # Documentation for the plans directory
-│       └── {PLAN_NAME}/         # Your plans go here
+│   └── local/                   # Developer-owned, ignored by the main repo
+│       ├── README.md            # Purpose, privacy, and ownership guidance
+│       ├── context/             # Personal or machine-specific context
+│       ├── skills/              # Personal or experimental skills
+│       └── plans/               # Tracked plans, tasks, and learnings
 ├── .claude/
 │   └── skills/                  # Symlink → ../.agents/skills
 ├── .cursor/
@@ -89,15 +96,15 @@ cd my-project
 - **Edit `AGENTS.md`** — Replace the stub content with your project's overview, structure, conventions, and workflow. This is the main file agents read.
 - **Add platform files** — For Cursor or Claude, create symlinks from `.cursor/skills/` and `.claude/skills/` to `.agents/skills/`. For Copilot, add `.github/copilot-instructions.md` referencing `AGENTS.md`.
 
-### 3. Optional: Set Up Plans Version Control
+### 3. Optional: Set Up Local Version Control
 
-If you want to track your plans and tasks with git (without committing them to the main repo), run:
+If you want to track your local plans, context, experimental skills, and workflow state with Git without committing them to the main repository, run:
 
 ```bash
-bash .agents/skills/setup-nested-plans-repo/scripts/setup_nested_plans_repo.sh
+bash .agents/skills/setup-local-repo/scripts/setup_local_repo.sh
 ```
 
-This creates a nested git repository in `.agents/plans/` so you can commit plan progress locally.
+This creates a nested Git repository in `.agents/local/`. The directory also works without nested version control.
 
 ### 4. Full Setup Guide
 
@@ -131,7 +138,7 @@ Run the `whats-next` skill to see the next actionable steps across all active tr
 | `create-task` | Add a task file under an existing plan |
 | `update-plan` | Change statuses, add tasks, revise tasks, or complete plans |
 | `create-learning` | Capture non-obvious insights as structured learnings |
-| `setup-nested-plans-repo` | Initialize nested git repo for plans |
+| `setup-local-repo` | Initialize or migrate the nested repository for developer-owned local content |
 | `setup-agentic-context` | Bootstrap agentic infrastructure in a new repo |
 | `review-agentic-infra` | Audit agent infrastructure |
 
@@ -153,7 +160,9 @@ Skill definitions live in [`.agents/skills/`](.agents/skills/). Platform-specifi
 
 - **Keep `AGENTS.md` concise** — Put detailed information in `.agents/` files.
 - **Run `whats-next` when resuming work** — It surfaces the next actionable steps so you can pick up where you left off.
-- **Use the nested plans repo** — If you want local version control for your plans, run the setup script so each developer can track their own plan history.
+- **Use `.agents/local/` for developer-owned content** — Plans, personal context, experimental skills, scratch work, and private workflow state belong here rather than in shared infrastructure.
+- **Use the optional local repository** — Run `setup-local-repo` when you want independent history for the entire developer space.
+- **Do not treat local as a secrets vault** — Keep credentials and production secrets in an appropriate secret manager.
 - **Avoid duplication** — Platform-specific files should reference `AGENTS.md` and `.agents/`, not repeat their content.
 
 ---

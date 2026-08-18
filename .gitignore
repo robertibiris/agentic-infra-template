@@ -29,10 +29,15 @@ __pycache__/
 
 # Note: Context files (AGENTS.md, .agents/, .cursor/) are tracked in git
 
-# Ignore plans, since they are developer-specific, but keep README and Templates
-.agents/plans/*
-!.agents/plans/README.md
-!.agents/plans/AGENTS.md
-!.agents/plans/_template
-!.agents/plans/_template/
-!.agents/plans/_template/**
+# Ignore developer-owned local content while preserving the shared scaffold
+.agents/local/*
+!.agents/local/README.md
+!.agents/local/context/
+.agents/local/context/*
+!.agents/local/context/.gitkeep
+!.agents/local/skills/
+.agents/local/skills/*
+!.agents/local/skills/.gitkeep
+!.agents/local/plans/
+.agents/local/plans/*
+!.agents/local/plans/.gitkeep

@@ -1,18 +1,18 @@
 ---
 name: create-learning
-description: "Capture non-obvious, hard-won insights as structured learnings — either within a specific tracked plan (persisted plan, nested plan) or as cross-cutting reference docs. This is an infra skill that writes to .agents/plans/{PLAN}/learnings.md or .agents/plans/_learnings/. Use when insights, patterns, or gotchas emerge during work that future contributors should know. Triggers on: 'create learning', 'capture learnings', 'what did we learn', 'record insights', 'add learnings', 'save learnings', or when non-obvious discoveries surface during plan execution."
+description: "Capture non-obvious, hard-won insights as structured learnings — either within a specific tracked plan (persisted plan, nested plan) or as cross-cutting reference docs. This infra skill writes to .agents/local/plans/{PLAN}/learnings.md or .agents/local/plans/_learnings/. Use when insights, patterns, or gotchas emerge during work that future contributors should know. Triggers on: 'create learning', 'capture learnings', 'what did we learn', 'record insights', 'add learnings', 'save learnings', or when non-obvious discoveries surface during plan execution."
 ---
 
 Interactively create or update learnings documents so non-obvious, hard-won insights are captured in a consistent format.
 
-**Important**: This skill writes to file-based tracked plans under `.agents/plans/` — not the agent's built-in planning feature.
+**Important**: This skill writes to file-based tracked plans under `.agents/local/plans/` — not the agent's built-in planning feature.
 
 ## Interactive flow
 
 ### 1. Determine scope
 
-- **Plan-specific** → write to `.agents/plans/{PLAN_NAME}/learnings.md`
-- **Cross-cutting** → write to `.agents/plans/_learnings/{topic-name}.md`
+- **Plan-specific** → write to `.agents/local/plans/{PLAN_NAME}/learnings.md`
+- **Cross-cutting** → write to `.agents/local/plans/_learnings/{topic-name}.md`
 
 ### 2. Identify target
 
@@ -29,7 +29,7 @@ Interactively create or update learnings documents so non-obvious, hard-won insi
 
 ### 4. Draft and confirm
 
-- Structure the file using `.agents/plans/_template/learnings.md`.
+- Structure the file using `.agents/skills/create-learning/templates/learnings.md`.
 - Show the full drafted content and request explicit confirmation.
 - Write files only after explicit confirmation.
 
@@ -42,8 +42,8 @@ Interactively create or update learnings documents so non-obvious, hard-won insi
 
 ## Existing file behavior
 
-- If `.agents/plans/{PLAN_NAME}/learnings.md` exists, append new sections and continue numbering.
-- If `.agents/plans/_learnings/{topic-name}.md` exists, ask whether to update the existing file or create a new topic file.
+- If `.agents/local/plans/{PLAN_NAME}/learnings.md` exists, append new sections and continue numbering.
+- If `.agents/local/plans/_learnings/{topic-name}.md` exists, ask whether to update the existing file or create a new topic file.
 - Preserve reverse-chronological progress notes in related plan/task files when they are updated as part of this workflow.
 
 ## Output

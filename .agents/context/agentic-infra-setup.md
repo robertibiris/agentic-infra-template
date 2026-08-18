@@ -1,80 +1,83 @@
 # Agentic Infrastructure Setup Guide
 
-A step-by-step guide for setting up AI agent infrastructure in any project, in a platform-agnostic manner (Cursor, Claude Code, Copilot, etc.).
-
----
+A platform-agnostic guide for giving AI agents and developers shared project context, repeatable skills, and a private local workspace.
 
 ## System Overview
 
-The agentic infrastructure gives AI agents and humans a shared, structured context so they can work effectively across sessions and platforms. The system has three layers: context (what the project is), skills (what agents can do), and plans (what's being worked on).
+The infrastructure separates shared project knowledge from developer-owned working state:
 
-```
+```text
 project-root/
-├── AGENTS.md                        # Single source of truth (REQUIRED)
-├── .agents/                         # Structured context, skills, and plans (REQUIRED)
-│   ├── context/                     # Reference docs
-│   │   ├── agentic-infra-setup.md   # This file
-│   │   └── [domain-specific].md     # Additional context as needed
-│   ├── skills/                      # Skill definitions (single source of truth)
-│   │   ├── create-plan/SKILL.md
-│   │   ├── create-task/SKILL.md
-│   │   ├── update-plan/SKILL.md
-│   │   ├── whats-next/SKILL.md
-│   │   ├── create-learning/SKILL.md
-│   │   ├── setup-agentic-context/SKILL.md
-│   │   ├── setup-nested-plans-repo/SKILL.md
-│   │   └── review-agentic-infra/SKILL.md
-│   └── plans/                       # Tracked plans and tasks
-│       ├── _template/               # Templates for plans, tasks, learnings
-│       └── {PLAN_NAME}/             # One directory per plan
-├── CLAUDE.md                        # Claude integration (OPTIONAL)
-├── .claude/
-│   └── skills/                      # Symlink → ../.agents/skills (OPTIONAL)
-├── .cursor/
-│   ├── skills/                      # Symlink → ../.agents/skills (OPTIONAL)
-│   └── rules/                       # Cursor project rules (OPTIONAL)
-└── .github/
-    └── copilot-instructions.md      # GitHub Copilot integration (OPTIONAL)
+├── AGENTS.md                         # Shared source of truth
+├── .agents/
+│   ├── context/                      # Shared reference documentation
+│   │   └── agentic-infra-setup.md
+│   ├── skills/                       # Shared skills and skill-owned templates
+│   │   ├── create-plan/
+│   │   │   ├── SKILL.md
+│   │   │   └── templates/plan.md
+│   │   ├── create-task/
+│   │   │   ├── SKILL.md
+│   │   │   └── templates/task.md
+│   │   ├── create-learning/
+│   │   │   ├── SKILL.md
+│   │   │   └── templates/learnings.md
+│   │   ├── setup-local-repo/
+│   │   │   ├── SKILL.md
+│   │   │   ├── scripts/
+│   │   │   └── templates/local-repo.gitignore.template
+│   │   └── [other skills]/
+│   └── local/                        # Developer-owned content
+│       ├── README.md                 # Shared purpose and privacy guidance
+│       ├── context/.gitkeep          # Personal or machine-specific context
+│       ├── skills/.gitkeep           # Personal or experimental skills
+│       └── plans/.gitkeep            # Tracked plans, tasks, and learnings
+├── CLAUDE.md                         # Optional platform reference
+├── .claude/skills -> ../.agents/skills
+├── .cursor/skills -> ../.agents/skills
+└── .github/copilot-instructions.md   # Optional platform reference
 ```
-
----
 
 ## Core Components
 
-### AGENTS.md (Required)
+### `AGENTS.md`
 
-The single source of truth for project context. Lives at the project root. Contains the tracked plans overview, key terminology, infrastructure description, skills index, resuming guidance, and assistant behavior requirements.
+The root source of truth for project context, tracked-plan conventions, the skill index, workflow guidance, and assistant behavior. Subdirectory `AGENTS.md` files may add narrower instructions, but they must not duplicate or contradict the root.
 
-Based on the [AGENTS.md pattern](https://agents.md/). Additional `AGENTS.md` files can be placed in subdirectories for folder-specific context, but the root-level file is mandatory.
+### `.agents/context/`
 
-### .agents/ Directory (Required)
+Shared, topic-focused reference documentation such as architecture, testing conventions, or commit guidance. Keep detailed material here and link to it from `AGENTS.md`.
 
-Houses all structured context, organized into three areas:
+### `.agents/skills/`
 
-**`context/`** — Reference documentation. This setup guide lives here. Add domain-specific context files as your project grows (e.g., `architecture.md`, `commit-guidelines.md`). Keep context files inside this subdirectory, not at the `.agents/` root level.
+Shared repeatable workflows. Every skill has a `SKILL.md` with YAML frontmatter and actionable instructions. Templates used by one skill live in that skill's `templates/` directory; deterministic implementations live in its `scripts/` directory.
 
-**`skills/`** — Skill definitions. Each skill is a directory containing a `SKILL.md` file with YAML frontmatter:
+### `.agents/local/`
 
-```markdown
----
-name: skill-name
-description: "What the skill does, when to use it, trigger phrases. This is the
-  primary triggering mechanism — it must be thorough enough that the agent
-  recognizes when to use it from natural language."
----
+The local directory is the developer-owned boundary. Use it for material that helps one developer or machine but should not enter the main repository:
 
-[Skill instructions — inputs, behavior, side effects, notes]
-```
+- `context/` for personal preferences, private notes, and machine-specific guidance.
+- `skills/` for personal or experimental skills not ready to be shared.
+- `plans/` for tracked plans, tasks, progress notes, and learnings.
+- Other scratch files or local workflow state as needed.
 
-The template ships with 8 infra skills for plan management, setup, and auditing. Project-specific skills (e.g., deployment, testing) can be added alongside them.
+The outer repository tracks only `.agents/local/README.md` and the three `.gitkeep` placeholders. All other content is ignored. The directory may optionally contain its own nested Git repository, initialized by `setup-local-repo`, so local work can have independent history.
 
-**`plans/`** — Tracked plans and tasks. Each plan is a directory containing `plan.md` and numbered task files (`{NN}-{TASK_NAME}.md`). Templates live in `_template/`. Plans are typically git-ignored by the main repo and optionally tracked by a nested git repository (see the `setup-nested-plans-repo` skill).
+`.agents/local/` is private by convention, not a secrets vault. Use a secret manager for credentials and production secrets.
 
----
+### Tracked Plans
+
+Tracked plans live only at `.agents/local/plans/{PLAN_NAME}/`. Each plan contains `plan.md`, numbered task files, and optionally `learnings.md`. Cross-cutting learnings live at `.agents/local/plans/_learnings/`.
+
+Plan templates do not live in the local repository. They are shared, skill-owned infrastructure:
+
+- `.agents/skills/create-plan/templates/plan.md`
+- `.agents/skills/create-task/templates/task.md`
+- `.agents/skills/create-learning/templates/learnings.md`
 
 ## Platform Integration
 
-Platform-specific directories use **symlinks** to `.agents/skills/` so all platforms read skill definitions from a single source of truth.
+Platform directories should reference shared sources rather than duplicate them.
 
 ### Cursor
 
@@ -83,102 +86,98 @@ mkdir -p .cursor
 ln -s ../.agents/skills .cursor/skills
 ```
 
-Optionally add `.cursor/rules/*.mdc` for Cursor-specific project rules. Rules should reference `AGENTS.md`, not duplicate its content.
+Optional `.cursor/rules/*.mdc` files should contain only Cursor-specific guidance.
 
 ### Claude
 
 ```bash
-echo "@AGENTS.md" > CLAUDE.md
+printf '@AGENTS.md\n' > CLAUDE.md
 mkdir -p .claude
 ln -s ../.agents/skills .claude/skills
 ```
 
-`CLAUDE.md` uses the `@`-reference syntax to include `AGENTS.md`. Only add Claude-specific content if truly platform-specific.
-
-Reference: [Claude Code Best Practices](https://www.anthropic.com/engineering/claude-code-best-practices)
-
 ### GitHub Copilot
 
-```bash
-mkdir -p .github
-# Create .github/copilot-instructions.md referencing AGENTS.md
-```
-
-Reference: [GitHub Copilot Custom Instructions](https://docs.github.com/en/copilot/how-tos/configure-custom-instructions/add-repository-instructions)
-
----
+Create `.github/copilot-instructions.md` and point it to `AGENTS.md`. Add only Copilot-specific instructions there.
 
 ## Step-by-Step Setup
 
-### Step 1: Create AGENTS.md
+### Step 1: Customize `AGENTS.md`
 
-Create `AGENTS.md` at the project root. Use this template's own `AGENTS.md` as a starting point — replace the stub content with your project's overview, structure, conventions, and workflow. The key sections to fill in are:
+Replace the stub project description and add project-specific structure, conventions, context links, skills, and behavioral requirements. Keep the tracked-plan and local-directory contracts unless intentionally changing the infrastructure.
 
-- **Tracked Plans Overview** — keep as-is unless you modify the plans system
-- **Agentic Infrastructure Description** — update the `.agents/context/` references for your project's context files
-- **Skills Index** — add any project-specific skills alongside the infra skills
-- **Assistant Behavior Requirements** — add project-specific rules as needed
-
-### Step 2: Set up .agents/ directory
+### Step 2: Create Shared Infrastructure
 
 ```bash
-mkdir -p .agents/context .agents/skills .agents/plans/_template
+mkdir -p .agents/context .agents/skills
+mkdir -p .agents/local/context .agents/local/skills .agents/local/plans
 ```
 
-Copy or adapt the template's skill definitions and plan templates. If starting from this template project, these are already in place.
+Add `.agents/local/README.md` and the three outer-tracked `.gitkeep` files. Copy or adapt the shared skills and their templates.
 
-### Step 3: Add context files
-
-Create context files inside `.agents/context/` for your project's specific needs. Examples: `architecture.md`, `commit-guidelines.md`, `api-conventions.md`. Each file should cover one topic and be referenced from `AGENTS.md`.
-
-### Step 4: Set up platform integrations
-
-Based on which AI platforms you use, create the appropriate symlinks and config files (see the Platform Integration section above).
-
-### Step 5: Configure .gitignore
-
-Plans are typically developer-specific and should be git-ignored. The template's `.gitignore` already handles this:
+### Step 3: Configure the Outer `.gitignore`
 
 ```gitignore
-# Ignore plans (developer-specific), but keep shared infrastructure
-.agents/plans/*
-!.agents/plans/README.md
-!.agents/plans/AGENTS.md
-!.agents/plans/_template
-!.agents/plans/_template/
-!.agents/plans/_template/**
+# Ignore developer-owned local content while preserving shared scaffolding
+.agents/local/*
+!.agents/local/README.md
+!.agents/local/context/
+.agents/local/context/*
+!.agents/local/context/.gitkeep
+!.agents/local/skills/
+.agents/local/skills/*
+!.agents/local/skills/.gitkeep
+!.agents/local/plans/
+.agents/local/plans/*
+!.agents/local/plans/.gitkeep
 ```
 
-### Step 6: Optional — set up nested plans repo
+These rules keep private content out of the outer repository while allowing the starter structure to ship with the project.
 
-If you want local version control for your plans:
+### Step 4: Add Shared Context
+
+Create one focused file per topic under `.agents/context/` and reference it from `AGENTS.md`.
+
+### Step 5: Add Platform Integrations
+
+Create only the symlinks and reference files required by the platforms the project uses. Verify that every symlink resolves to `.agents/skills/`.
+
+### Step 6: Optional Local Repository
+
+For a fresh installation:
 
 ```bash
-bash .agents/skills/setup-nested-plans-repo/scripts/setup_nested_plans_repo.sh
+bash .agents/skills/setup-local-repo/scripts/setup_local_repo.sh
 ```
 
-This creates a nested git repository in `.agents/plans/` so you can commit plan progress independently.
+For a project upgrading from the former plan-specific nested repository:
+
+```bash
+bash .agents/skills/setup-local-repo/scripts/migrate_legacy_plans_repo.sh
+```
+
+The migration preserves the original Git history and moves plans beneath `.agents/local/plans/`. Review its safety snapshot and staged changes before committing.
 
 ### Step 7: Verify
 
-- [ ] `AGENTS.md` exists at project root with project-specific content
-- [ ] `.agents/context/` contains this setup guide and any project context files
-- [ ] `.agents/skills/` contains skill directories with `SKILL.md` files
-- [ ] `.agents/plans/_template/` contains plan and task templates
-- [ ] Platform symlinks resolve correctly (e.g., `ls .claude/skills/` shows skills)
-- [ ] `CLAUDE.md` or equivalent platform file references `AGENTS.md`
-- [ ] No information is duplicated between platform files and `AGENTS.md`
-
----
+- [ ] `AGENTS.md` describes the actual project and local-directory contract.
+- [ ] `.agents/context/` contains focused shared reference files.
+- [ ] Every shared skill has a clear `SKILL.md`; skill-specific templates live with their skill.
+- [ ] `.agents/local/README.md` explains purpose, privacy, ownership, and optional version control.
+- [ ] `context/`, `skills/`, and `plans/` placeholders are outer-tracked while representative local files are outer-ignored.
+- [ ] Plan workflows read and write only `.agents/local/plans/`.
+- [ ] `setup-local-repo` is idempotent and its generated `.gitignore` matches its template.
+- [ ] Platform symlinks resolve to `.agents/skills/` and platform files do not duplicate shared guidance.
+- [ ] Active infrastructure has no references to the former plan-specific root or setup skill.
 
 ## Best Practices
 
-**Single source of truth** — `AGENTS.md` is the master reference. Platform files and context docs should reference it, not duplicate it.
+**Single source of truth** — Keep project-wide instructions in `AGENTS.md`, detailed shared guidance in `.agents/context/`, and repeatable operations in skills.
 
-**Modular context** — Keep `AGENTS.md` concise. Detailed guidance belongs in `.agents/context/` files. Each context file should cover one topic.
+**Clear ownership** — Shared, portable material belongs in outer-tracked infrastructure. Developer-specific material belongs in `.agents/local/`.
 
-**Skills over prose** — When agents need to perform a repeatable action, define it as a skill with clear inputs, behavior, and side effects. This is more reliable than embedding instructions in context files.
+**Skill-owned assets** — Keep templates and deterministic scripts with the skill that consumes them.
 
-**Platform separation** — Platform-specific files (`.cursor/rules/`, `CLAUDE.md`) should only contain truly platform-specific instructions. Everything else goes in `.agents/`.
+**Local privacy** — Review local content before sharing its nested repository. Store real secrets elsewhere.
 
-**Regular audits** — Use the `review-agentic-infra` skill periodically to check for inconsistencies, stale references, and structural issues.
+**Regular audits** — Use `review-agentic-infra` to catch broken references, duplicated instructions, unsafe ignore rules, and path drift.

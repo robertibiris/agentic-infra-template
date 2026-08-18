@@ -8,7 +8,7 @@ updated: {YYYY-MM-DD HH:MM TZ}
 ## Purpose
 {Brief goal of the task.}
 
-{Add here anything else you think necessary to include in the task, you can create other markdown sections or elements if you want}
+{Add any other sections needed for the task.}
 
 ## Progress Notes
 - {YYYY-MM-DD HH:MM TZ} — {Most recent update first}

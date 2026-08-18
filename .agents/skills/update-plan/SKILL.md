@@ -1,11 +1,11 @@
 ---
 name: update-plan
-description: "Update a tracked plan (persisted plan, nested plan) — change task statuses, create new tasks discovered mid-work, revise existing task steps or requirements, or wrap up a completed plan. This is NOT the agent's built-in planning feature — it updates file-based tracked plans under .agents/plans/. Use when: work was completed and statuses need updating, new work was discovered that needs a new task, an existing task's approach changed and needs revision, or the entire plan is done and should be closed out. Triggers on: 'update plan', 'update status', 'mark task done', 'complete plan', 'add a task', 'revise the plan', 'I finished X', 'wrap up the plan', 'the plan needs changes', or any request to mutate tracked plan state."
+description: "Update a tracked plan (persisted plan, nested plan) — change task statuses, create new tasks discovered mid-work, revise existing task steps or requirements, or wrap up a completed plan. This is NOT the agent's built-in planning feature — it updates file-based tracked plans under .agents/local/plans/. Use when: work was completed and statuses need updating, new work was discovered that needs a new task, an existing task's approach changed and needs revision, or the entire plan is done and should be closed out. Triggers on: 'update plan', 'update status', 'mark task done', 'complete plan', 'add a task', 'revise the plan', 'I finished X', 'wrap up the plan', 'the plan needs changes', or any request to mutate tracked plan state."
 ---
 
 Update a tracked plan — statuses, new tasks, task revisions, or plan completion.
 
-**Important**: This skill updates file-based tracked plans under `.agents/plans/` — not the agent's built-in planning feature.
+**Important**: This skill updates file-based tracked plans under `.agents/local/plans/` — not the agent's built-in planning feature.
 
 ## Inputs
 
@@ -24,7 +24,7 @@ Update the `status` field of a task or plan (`pending`, `active`, `paused`, `com
 
 ### 2. New tasks
 
-Create new task files for work discovered mid-plan. Use the Task Template (at `.agents/plans/_template`). Follow the numeric prefix naming convention from the `create-task` skill — use dot notation (e.g., `02.1-`) to insert between existing tasks without renumbering. Update the parent plan's "Tasks" section and progress notes.
+Create new task files for work discovered mid-plan. Use the task template at `.agents/skills/create-task/templates/task.md`. Follow the numeric prefix naming convention from the `create-task` skill — use dot notation (e.g., `02.1-`) to insert between existing tasks without renumbering. Update the parent plan's "Tasks" section and progress notes.
 
 ### 3. Task revisions
 
@@ -38,8 +38,8 @@ When all tasks are done, verify all tasks show `completed` status. If any don't,
 
 1. **Assess what changed.** Parse the user's message to determine which mutation types apply.
 2. **Resolve target files:**
-   - Plans: `.agents/plans/{PLAN_NAME}/plan.md`
-   - Tasks: `.agents/plans/{PLAN_NAME}/{TASK_NAME}.md`
+   - Plans: `.agents/local/plans/{PLAN_NAME}/plan.md`
+   - Tasks: `.agents/local/plans/{PLAN_NAME}/{TASK_NAME}.md`
 3. **Apply mutations:**
    - For status changes: update `status` and `updated` timestamp.
    - For new tasks: create task files, update parent plan's Tasks section.

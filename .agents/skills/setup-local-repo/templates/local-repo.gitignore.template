@@ -1,7 +1,8 @@
-# Ignore files tracked by the main repository
+# Ignore files tracked by the outer repository
 README.md
-AGENTS.md
-_template/
+context/.gitkeep
+skills/.gitkeep
+plans/.gitkeep
 
 # System files
 .DS_Store
